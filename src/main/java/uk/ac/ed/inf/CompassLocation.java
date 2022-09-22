@@ -2,6 +2,7 @@ package uk.ac.ed.inf;
 
 public enum CompassLocation
 {
+
     NORTH,
     NORTHEAST,
     NORTHNORTHEAST,
@@ -17,4 +18,5 @@ public enum CompassLocation
     WESTNORTHWEST,
     NORTHWEST,
     NORTHNORTHWEST
+
 }
