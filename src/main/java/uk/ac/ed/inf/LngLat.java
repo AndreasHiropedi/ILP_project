@@ -3,9 +3,11 @@ package uk.ac.ed.inf;
 public record LngLat(double lng, double lat)
 {
 
+    private static final double ACCEPTABLE_DISTANCE = 0.00015;
+
     public boolean inCentralArea()
     {
-        // ToDo
+        // TODO
         return true;
     }
 
@@ -16,12 +18,12 @@ public record LngLat(double lng, double lat)
 
     public boolean closeTo(LngLat location)
     {
-        return distanceTo(location) <= 0.00015;
+        return this.distanceTo(location) < ACCEPTABLE_DISTANCE;
     }
 
-    public LngLat nextPosition(CompassLocation direction)
+    public LngLat nextPosition(CompassLocation position)
     {
-        // ToDo
+        // TODO
         return null;
     }
 
