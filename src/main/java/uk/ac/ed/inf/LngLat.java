@@ -8,7 +8,7 @@ public record LngLat(double lng, double lat)
     public boolean inCentralArea()
     {
         // TODO
-        return true;
+        return false;
     }
 
     public double distanceTo(LngLat location)
