@@ -1,28 +1,60 @@
 package uk.ac.ed.inf;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public record LngLat(double lng, double lat)
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+@JsonIgnoreProperties("name")
+public record LngLat(
+        @JsonProperty("longitude") double lng,
+        @JsonProperty("latitude") double lat)
 {
 
+    /**
+     *
+     */
     private static final double ACCEPTABLE_DISTANCE = 0.00015;
 
-    public boolean inCentralArea()
-    {
-        // TODO
-        String dataURL = "https://ilp-rest.azurewebsites.net/centralArea";
+    /**
+     *
+     * @return
+     */
+    public boolean inCentralArea() throws IOException {
+        String baseURL = "https://ilp-rest.azurewebsites.net/centralArea";
+        ArrayList<LngLat> corners = new ObjectMapper().readValue(new URL(baseURL), new TypeReference<>(){});
+        boolean isInArea = true;
 
-        return false;
+
+        return isInArea;
     }
 
+    /**
+     *
+     * @return
+     */
     public double distanceTo(LngLat location)
     {
         return Math.sqrt( Math.pow( (this.lng - location.lng) , 2) - Math.pow( (this.lat - location.lat) , 2) );
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean closeTo(LngLat location)
     {
         return this.distanceTo(location) < ACCEPTABLE_DISTANCE;
     }
 
+    /**
+     *
+     * @return
+     */
     public LngLat nextPosition(CompassLocation position)
     {
         // TODO
