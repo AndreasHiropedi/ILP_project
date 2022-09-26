@@ -65,8 +65,14 @@ public record LngLat(
      */
     public LngLat nextPosition(CompassLocation position)
     {
-
-        return null;
+        if (position == null)
+        {
+            return this;
+        }
+        double angle = position.ordinal() * 22.5;
+        double lng = this.lng + Math.sin(Math.toRadians(angle));
+        double lat = this.lat + Math.cos(Math.toRadians(angle));
+        return new LngLat(lng, lat);
     }
 
 }
