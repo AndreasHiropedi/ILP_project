@@ -8,6 +8,8 @@ public record LngLat(double lng, double lat)
     public boolean inCentralArea()
     {
         // TODO
+        String dataURL = "https://ilp-rest.azurewebsites.net/centralArea";
+
         return false;
     }
 
