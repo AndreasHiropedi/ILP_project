@@ -11,7 +11,8 @@ import java.util.ArrayList;
 @JsonIgnoreProperties("name")
 public record LngLat(
         @JsonProperty("longitude") double lng,
-        @JsonProperty("latitude") double lat)
+        @JsonProperty("latitude") double lat
+)
 {
 
     /**
@@ -70,8 +71,8 @@ public record LngLat(
             return this;
         }
         double angle = position.ordinal() * 22.5;
-        double lng = this.lng + Math.sin(Math.toRadians(angle));
-        double lat = this.lat + Math.cos(Math.toRadians(angle));
+        double lng = this.lng + ACCEPTABLE_DISTANCE * Math.sin(Math.toRadians(angle));
+        double lat = this.lat + ACCEPTABLE_DISTANCE * Math.cos(Math.toRadians(angle));
         return new LngLat(lng, lat);
     }
 

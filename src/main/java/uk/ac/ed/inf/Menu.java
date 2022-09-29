@@ -1,8 +1,6 @@
 package uk.ac.ed.inf;
 
-public class Menu
+public record Menu(String name, int priceInPence)
 {
-
-
 
 }
