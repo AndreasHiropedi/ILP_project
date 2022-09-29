@@ -15,6 +15,12 @@ public record Order(
 )
 {
 
+    /**
+     *
+     * @param restaurants
+     * @param allPizzas
+     * @return
+     */
     public int getDeliveryCost(Vector<Restaurant> restaurants, List<String> allPizzas)
     {
         // TODO
