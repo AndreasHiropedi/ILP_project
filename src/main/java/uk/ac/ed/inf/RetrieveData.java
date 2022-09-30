@@ -15,7 +15,7 @@ public class RetrieveData
     }
 
     //TODO method for retrieving data (plus documentation)
-    public void FetchData(URL baseURL)
+    public static void FetchData(URL baseURL)
     {
 
     }
