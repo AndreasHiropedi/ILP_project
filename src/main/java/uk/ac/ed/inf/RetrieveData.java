@@ -8,10 +8,24 @@ import java.net.URL;
  */
 public class RetrieveData
 {
+    private static RetrieveData retrieveData;
 
     public RetrieveData()
     {
 
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static RetrieveData getInstance()
+    {
+        if (retrieveData == null)
+        {
+            retrieveData = new RetrieveData();
+        }
+        return retrieveData;
     }
 
     //TODO method for retrieving data (plus documentation)
