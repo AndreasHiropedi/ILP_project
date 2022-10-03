@@ -1,11 +1,6 @@
 package uk.ac.ed.inf;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -33,9 +28,8 @@ public record LngLat(
      * as read from the REST server
      * @return true if the current location is in the Central Campus area, false otherwise
      */
-    public boolean inCentralArea() throws IOException {
-        String baseURL = "https://ilp-rest.azurewebsites.net/centralArea";
-        ArrayList<LngLat> corners = new ObjectMapper().readValue(new URL(baseURL), new TypeReference<>(){});
+    public boolean inCentralArea() {
+        ArrayList<LngLat> corners = RetrieveData.getInstance().retrieveCentralArea();
 
         // this part handles checking if a given point is inside the central area
         // (treats the central area like a polygon shape of any kind)

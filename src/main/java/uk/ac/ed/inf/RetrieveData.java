@@ -1,6 +1,9 @@
 package uk.ac.ed.inf;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * this singleton class is used to retrieve data
@@ -9,6 +12,7 @@ import java.net.URL;
 public class RetrieveData
 {
     private static RetrieveData retrieveData;
+    private static final String baseURL = "https://ilp-rest.azurewebsites.net";
 
     public RetrieveData()
     {
@@ -16,8 +20,8 @@ public class RetrieveData
     }
 
     /**
-     *
-     * @return
+     * creates an instance of the singleton class
+     * @return the instance of the singleton object
      */
     public static RetrieveData getInstance()
     {
@@ -28,10 +32,52 @@ public class RetrieveData
         return retrieveData;
     }
 
-    //TODO method for retrieving data (plus documentation)
-    public static void FetchData(URL baseURL)
+    /**
+     * retrieves the data for the Central Campus Area
+     * from the REST server
+     * @return an arraylist of the co-ordinates of the
+     * Central Campus Area
+     */
+    public ArrayList<LngLat> retrieveCentralArea()
     {
+        try
+        {
+            return new ObjectMapper().readValue(new URL(baseURL + "/centralArea"), new TypeReference<>(){});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    /**
+     * retrieves the data for all restaurants on the PizzaDronz
+     * app from the REST server
+     * @return an arraylist of all the details for all
+     * restaurants
+     */
+    public ArrayList<Restaurant> retrieveRestaurantData()
+    {
+        try
+        {
+            return new ObjectMapper().readValue(new URL(baseURL + "/restaurants"), new TypeReference<>(){});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * retrieves the data for all orders made on the
+     * PizzaDronz app from the REST server
+     * @return an arraylist of all the details for all
+     * orders placed
+     */
+    public ArrayList<Order> retrieveOrderData()
+    {
+        try
+        {
+            return new ObjectMapper().readValue(new URL(baseURL + "/orders"), new TypeReference<>(){});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
