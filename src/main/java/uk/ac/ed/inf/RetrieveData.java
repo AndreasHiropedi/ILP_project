@@ -54,11 +54,11 @@ public class RetrieveData
      * @return an arraylist of all the details for all
      * restaurants
      */
-    public ArrayList<Restaurant> retrieveRestaurantData()
+    public ArrayList<Restaurant> retrieveRestaurantData(URL baseURL)
     {
         try
         {
-            return new ObjectMapper().readValue(new URL(baseURL + "/restaurants"), new TypeReference<>(){});
+            return new ObjectMapper().readValue(baseURL, new TypeReference<>(){});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

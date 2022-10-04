@@ -41,7 +41,7 @@ public record Restaurant(
      */
     public static Restaurant[] getRestaurantsFromRestServer(URL serverBaseAddress)
     {
-        List<Restaurant> restaurants = null;
+        List<Restaurant> restaurants = RetrieveData.getInstance().retrieveRestaurantData(serverBaseAddress);
         return restaurants.toArray(new Restaurant[0]);
     }
 
