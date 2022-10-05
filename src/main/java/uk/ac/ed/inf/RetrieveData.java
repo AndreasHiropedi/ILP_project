@@ -51,6 +51,8 @@ public class RetrieveData
     /**
      * retrieves the data for all restaurants on the PizzaDronz
      * app from the REST server
+     * @param baseURL the base URL which stores all restaurant data
+     *                on the REST server
      * @return an arraylist of all the details for all
      * restaurants
      */
