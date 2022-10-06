@@ -1,6 +1,8 @@
 package uk.ac.ed.inf;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -45,10 +47,13 @@ public record Order(
     {
         try {
             for (Restaurant participant : participants) {
-                List<String> pizzas = Arrays.stream(participant.getMenu()).map(Menu::name).toList();
-
+                ArrayList<String> pizzas = new ArrayList<>(Arrays.stream(participant.getMenu()).map(Menu::name).toList());
+                if (!pizzas.containsAll(List.of(allPizzas)))
+                {
+                    throw new InvalidPizzaCombinationException("This pizza combination is invalid!");
+                }
             }
-            throw new InvalidPizzaCombinationException("This pizza combination is invalid!");
+            return priceTotalInPence + 100;
         }
         catch (Exception e)
         {
