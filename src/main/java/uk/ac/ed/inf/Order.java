@@ -1,7 +1,7 @@
 package uk.ac.ed.inf;
 
 import java.util.List;
-import java.util.Vector;
+
 
 /**
  * this class is used to store all orders based on the
@@ -40,10 +40,20 @@ public record Order(
      * @return the total cost (in pence) of all these items,
      * including delivery charges
      */
-    public int getDeliveryCost(Restaurant[] participants, List<String> allPizzas)
+    public int getDeliveryCost(Restaurant[] participants, String... allPizzas)
     {
-        // TODO
-        return 100;
+        try
+        {
+            for (Restaurant restaurant: participants)
+            {
+                return priceTotalInPence + 100;
+            }
+            throw new InvalidPizzaCombinationException("This pizza combination is invalid!");
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 }
