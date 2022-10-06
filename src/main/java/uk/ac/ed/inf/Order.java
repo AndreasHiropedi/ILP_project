@@ -1,5 +1,6 @@
 package uk.ac.ed.inf;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -42,11 +43,10 @@ public record Order(
      */
     public int getDeliveryCost(Restaurant[] participants, String... allPizzas)
     {
-        try
-        {
-            for (Restaurant restaurant: participants)
-            {
-                return priceTotalInPence + 100;
+        try {
+            for (Restaurant participant : participants) {
+                List<String> pizzas = Arrays.stream(participant.getMenu()).map(Menu::name).toList();
+
             }
             throw new InvalidPizzaCombinationException("This pizza combination is invalid!");
         }
