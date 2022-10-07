@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param lat the latitude of the restaurant's location
  */
 public record Restaurant(
+        @JsonProperty("name")
         String name,
         @JsonProperty("menu")
         List<Menu> menuItems,
