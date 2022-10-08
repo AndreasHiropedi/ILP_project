@@ -46,7 +46,9 @@ public class TestLngLat
     @DisplayName("Testing different scenarios for distanceTo method")
     public void testDistanceTo()
     {
-
+        assertEquals(115.946233, point8.distanceTo(point10));
+        assertEquals(0.003616000000000952, point1.distanceTo(point2));
+        assertEquals(0, point1.distanceTo(point1));
         System.out.println("DistanceTo method works as expected!");
     }
 
@@ -54,7 +56,8 @@ public class TestLngLat
     @DisplayName("Testing different scenarios for closeTo method")
     public void testCloseTo()
     {
-
+        assertTrue(point1.closeTo(point1));
+        assertFalse(point1.closeTo(point2));
         System.out.println("CloseTo method works as expected!");
     }
 

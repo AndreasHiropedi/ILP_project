@@ -116,7 +116,7 @@ public record LngLat(
     public double distanceTo(LngLat location)
     {
         return Math.sqrt(
-                Math.pow( (this.lng - location.lng) , 2) - Math.pow( (this.lat - location.lat) , 2)
+                Math.pow( (this.lng - location.lng) , 2) + Math.pow( (this.lat - location.lat) , 2)
         );
     }
 
