@@ -64,7 +64,7 @@ public class RetrieveData
     {
         try
         {
-            return new ObjectMapper().readValue(baseURL, new TypeReference<>(){});
+            return new ObjectMapper().readValue(new URL(baseURL.toString() + "/restaurants"), new TypeReference<>(){});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
