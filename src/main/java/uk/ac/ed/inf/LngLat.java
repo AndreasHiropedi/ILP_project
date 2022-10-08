@@ -24,22 +24,74 @@ public record LngLat(
     private static final double ACCEPTABLE_DISTANCE = 0.00015;
 
     /**
+     * this method gets the minimum and maximum values
+     * for longitude and latitude, given the corners of central area
+     * @param coordinates list of co-ordinates for the corners of
+     *                    central area
+     * @return an array-list of these values, in this order:
+     * [minimum longitude, maximum longitude, minimum latitude, maximum latitude]
+     */
+    private ArrayList<Double> getMinAndMax(ArrayList<LngLat> coordinates)
+    {
+        double minLng = 9999;
+        double maxLng = 0;
+        double minLat = 9999;
+        double maxLat = 0;
+        for (LngLat coordinate: coordinates)
+        {
+            if (coordinate.lng > maxLng)
+            {
+                maxLng = coordinate.lng;
+            }
+            if (coordinate.lng < minLng)
+            {
+                minLng = coordinate.lng;
+            }
+            if (coordinate.lat > maxLat)
+            {
+                maxLat = coordinate.lat;
+            }
+            if (coordinate.lat < minLat)
+            {
+                minLat = coordinate.lat;
+            }
+        }
+        ArrayList<Double> values = new ArrayList<>();
+        values.add(minLng);
+        values.add(maxLng);
+        values.add(minLat);
+        values.add(maxLat);
+        return values;
+    }
+
+    /**
      * checks if the current location is within the Central Campus area,
      * as read from the REST server
      * @return true if the current location is in the Central Campus area, false otherwise
      */
     public boolean inCentralArea() {
         ArrayList<LngLat> corners = RetrieveData.getInstance().retrieveCentralArea();
-
-        // this checks if the point is exactly one of the corners
+        // this part handles points on the edges, or exact corners
+        // (treats them as being inside the central area)
+        double minLng = this.getMinAndMax(corners).get(0);
+        double maxLng = this.getMinAndMax(corners).get(1);
+        double minLat = this.getMinAndMax(corners).get(2);
+        double maxLat = this.getMinAndMax(corners).get(3);
         for (LngLat corner: corners)
         {
             if ( (this.lng == corner.lng) && (this.lat == corner.lat) )
             {
                 return true;
             }
+            if ( (this.lng == corner.lng) && (this.lat > minLat) && (this.lat < maxLat))
+            {
+                return true;
+            }
+            if ( (this.lat == corner.lat) && (this.lng > minLng) && (this.lng < maxLng))
+            {
+                return true;
+            }
         }
-
         // this part handles checking if a given point is inside the central area
         // (treats the central area like a polygon shape of any kind)
         int a, b;
