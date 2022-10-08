@@ -31,6 +31,15 @@ public record LngLat(
     public boolean inCentralArea() {
         ArrayList<LngLat> corners = RetrieveData.getInstance().retrieveCentralArea();
 
+        // this checks if the point is exactly one of the corners
+        for (LngLat corner: corners)
+        {
+            if ( (this.lng == corner.lng) && (this.lat == corner.lat) )
+            {
+                return true;
+            }
+        }
+
         // this part handles checking if a given point is inside the central area
         // (treats the central area like a polygon shape of any kind)
         int a, b;
