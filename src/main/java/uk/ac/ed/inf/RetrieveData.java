@@ -47,7 +47,9 @@ public class RetrieveData
         try
         {
             return new ObjectMapper().readValue(new URL(baseURL + "/centralArea"), new TypeReference<>(){});
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
@@ -65,7 +67,9 @@ public class RetrieveData
         try
         {
             return new ObjectMapper().readValue(new URL(baseURL.toString() + "/restaurants"), new TypeReference<>(){});
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
@@ -81,7 +85,9 @@ public class RetrieveData
         try
         {
             return new ObjectMapper().readValue(new URL(baseURL + "/orders"), new TypeReference<>(){});
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
