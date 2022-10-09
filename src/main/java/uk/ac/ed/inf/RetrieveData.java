@@ -32,10 +32,6 @@ public class RetrieveData
         return retrieveData;
     }
 
-
-    // TODO: generic method for data retrieval
-
-
     /**
      * retrieves the data for the Central Campus Area
      * from the REST server
