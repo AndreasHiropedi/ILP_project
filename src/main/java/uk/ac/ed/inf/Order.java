@@ -2,6 +2,7 @@ package uk.ac.ed.inf;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -38,18 +39,31 @@ public record Order(
      * £1 (100 pence) per delivery
      * @param participants an array of all existing restaurants
      *                     (from the REST server)
-     * @param allPizzas a list of all the items ordered
+     * @param allPizzas a stream of pizzas to be ordered
      * @return the total cost (in pence) of all these items,
      * including delivery charges
      */
     public int getDeliveryCost(Restaurant[] participants, String... allPizzas)
     {
         try {
+            int totalInPence = 0;
             for (Restaurant participant : participants) {
+                List<Menu> menuItems = Arrays.stream(participant.getMenu()).toList();
                 ArrayList<String> pizzas = new ArrayList<>(Arrays.stream(participant.getMenu()).map(Menu::name).toList());
-                if (pizzas.containsAll(List.of(allPizzas)))
+                List<String> orderedItems = List.of(allPizzas);
+                if (pizzas.containsAll(orderedItems))
                 {
-                    return priceTotalInPence + 100;
+                    for (Menu item: menuItems)
+                    {
+                        for (String orderItem: orderedItems)
+                        {
+                            if (item.name().equals(orderItem))
+                            {
+                                totalInPence += item.priceInPence();
+                            }
+                        }
+                    }
+                    return totalInPence + 100;
                 }
             }
             throw new InvalidPizzaCombinationException("This pizza combination is invalid!");

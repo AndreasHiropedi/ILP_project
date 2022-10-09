@@ -27,7 +27,7 @@ public class TestOrder
     Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer(base);
     Order order1 = orders.get(0);
     Order order2 = orders.get(2);
-    Order order3 = orders.get(5);
+    Order order3 = orders.get(11);
 
     @Test
     @DisplayName("Testing different scenarios for getDeliveryCost method")
@@ -35,13 +35,13 @@ public class TestOrder
     {
         String item1 = order1.orderItems().get(0);
         String item2 = order1.orderItems().get(1);
-        assertEquals(2700, order1.getDeliveryCost(restaurants, item1, item2));
+        assertEquals(2600, order1.getDeliveryCost(restaurants, item1, item2));
         item1 = order2.orderItems().get(0);
         item2 = order2.orderItems().get(1);
-        assertEquals(2500, order2.getDeliveryCost(restaurants, item1, item2));
+        assertEquals(2400, order2.getDeliveryCost(restaurants, item1, item2));
         item1 = order3.orderItems().get(0);
         item2 = order3.orderItems().get(1);
-        assertEquals(3162, order3.getDeliveryCost(restaurants, item1, item2));
+        assertEquals(2500, order3.getDeliveryCost(restaurants, item1, item2));
         System.out.println("GetDeliveryCost method works as expected!");
     }
 
