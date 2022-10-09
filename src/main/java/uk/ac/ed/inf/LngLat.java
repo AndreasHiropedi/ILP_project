@@ -148,8 +148,8 @@ public record LngLat(
         }
         // converts the compass direction to an angle (in degrees)
         double angle = position.ordinal() * 22.5;
-        double lng = this.lng + ACCEPTABLE_DISTANCE * Math.sin(Math.toRadians(angle));
-        double lat = this.lat + ACCEPTABLE_DISTANCE * Math.cos(Math.toRadians(angle));
+        double lng = this.lng + ACCEPTABLE_DISTANCE * Math.cos(Math.toRadians(angle));
+        double lat = this.lat + ACCEPTABLE_DISTANCE * Math.sin(Math.toRadians(angle));
         return new LngLat(lng, lat);
     }
 

@@ -66,10 +66,10 @@ public class TestLngLat
     public void testNextPosition()
     {
         assertEquals(point1, point1.nextPosition(null));
-        assertEquals(point1.lng(), point1.nextPosition(CompassLocation.EAST).lng());
-        assertEquals(point1.lat() + 0.00015, point1.nextPosition(CompassLocation.EAST).lat());
-        assertEquals(point1.lat(), point1.nextPosition(CompassLocation.NORTH).lat());
-        assertEquals(point1.lng() + 0.00015, point1.nextPosition(CompassLocation.NORTH).lng());
+        assertEquals(point1.lng() + 0.00015, point1.nextPosition(CompassLocation.EAST).lng());
+        assertEquals(point1.lat(), point1.nextPosition(CompassLocation.EAST).lat());
+        assertEquals(point1.lat()+ 0.00015, point1.nextPosition(CompassLocation.NORTH).lat());
+        assertEquals(point1.lng(), point1.nextPosition(CompassLocation.NORTH).lng());
         System.out.println("Next position method works as expected!");
     }
 
