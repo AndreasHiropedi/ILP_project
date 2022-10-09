@@ -47,11 +47,16 @@ public record Order(
         try {
             int totalInPence = 0;
             for (Restaurant participant : participants) {
+                // get all menu items as Menu objects
                 List<Menu> menuItems = Arrays.stream(participant.getMenu()).toList();
+                // save the names of those Menu objects as a list of strings
                 ArrayList<String> pizzas = new ArrayList<>(Arrays.stream(participant.getMenu()).map(Menu::name).toList());
+                // store the stream of pizzas as a list
                 List<String> orderedItems = List.of(allPizzas);
                 if (pizzas.containsAll(orderedItems))
                 {
+                    // if the pizza combination is valid, add the price
+                    // for each individual item to the total
                     for (Menu item: menuItems)
                     {
                         for (String orderItem: orderedItems)
@@ -62,9 +67,11 @@ public record Order(
                             }
                         }
                     }
+                    // also include the £1 delivery fee
                     return totalInPence + 100;
                 }
             }
+            // if no single restaurant can provide all pizzas, throw an exception
             throw new InvalidPizzaCombinationException("This pizza combination is invalid!");
         }
         catch (Exception e)
