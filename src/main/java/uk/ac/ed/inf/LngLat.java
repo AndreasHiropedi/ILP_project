@@ -43,29 +43,46 @@ public record LngLat(
 
         // this part handles points on the edges
         // (treats them as being inside the central area)
-        for (LngLat corner1 : corners)
+        int i = 0;
+        int j = 1;
+        while (i < corners.size())
         {
-            for (LngLat corner2 : corners) {
-                // if the point is the same, just ignore it
-                if ((corner1.lng == corner2.lng) && (corner1.lat == corner2.lat)) {
-                    continue;
-                }
-                // for each 2 corners with the same longitude, if the given point also has that longitude
-                // check that the given point's latitude falls between the latitudes of the two corners
-                // (it is on the edge)
-                if ((corner1.lng == corner2.lng) && (corner1.lng == this.lng) &&
-                        (((this.lat > corner1.lat) && (this.lat < corner2.lat)) ||
-                                ((this.lat < corner1.lat) && (this.lat > corner2.lat)))) {
-                    return true;
-                }
-                // for each 2 corners with the same latitude, if the given point also has that latitude
-                // check that the given point's longitude falls between the longitudes of the two corners
-                // (it is on the edge)
-                if ((corner1.lat == corner2.lat) && (corner1.lat == this.lat) &&
-                        (((this.lng > corner1.lng) && (this.lng < corner2.lng)) ||
-                                ((this.lng < corner1.lng) && (this.lng > corner2.lng)))) {
-                    return true;
-                }
+            // for each 2 corners with the same longitude, if the given point also has that longitude
+            // check that the given point's latitude falls between the latitudes of the two corners
+            // (it is on the edge)
+            if ((corners.get(i).lng == corners.get(j).lng) && (corners.get(i).lng == this.lng) &&
+                    (((this.lat > corners.get(i).lat) && (this.lat < corners.get(j).lat)) ||
+                            ((this.lat < corners.get(i).lat) && (this.lat > corners.get(j).lat))))
+            {
+                return true;
+            }
+            // for each 2 corners with the same latitude, if the given point also has that latitude
+            // check that the given point's longitude falls between the longitudes of the two corners
+            // (it is on the edge)
+            else if ((corners.get(i).lat == corners.get(j).lat) && (corners.get(i).lat == this.lat) &&
+                    (((this.lng > corners.get(i).lng) && (this.lng < corners.get(j).lng)) ||
+                            ((this.lng < corners.get(i).lng) && (this.lng > corners.get(j).lng))))
+            {
+                return true;
+            }
+            // if an edge is diagonal, check that the point lies on that edge using the line gradient
+            // ensure the longitude of the point is between the longitudes of the two corners
+            // ensure the latitude of the point is between the latitudes of the two corners
+            else if (((corners.get(j).lat - corners.get(i).lat) / (corners.get(j).lng - corners.get(i).lng)) ==
+                    ((this.lat - corners.get(i).lat) / (this.lng - corners.get(i).lng)) &&
+                    (((this.lng > corners.get(i).lng) && (this.lng < corners.get(j).lng)) ||
+                            ((this.lng < corners.get(i).lng) && (this.lng > corners.get(j).lng))) &&
+                    (((this.lat > corners.get(i).lat) && (this.lat < corners.get(j).lat)) ||
+                            ((this.lat < corners.get(i).lat) && (this.lat > corners.get(j).lat))))
+            {
+                return true;
+            }
+            i++;
+            j++;
+            // to check the last edge, we reset j (edge between last vertex and first vertex)
+            if (j == corners.size())
+            {
+                j = 0;
             }
         }
 
