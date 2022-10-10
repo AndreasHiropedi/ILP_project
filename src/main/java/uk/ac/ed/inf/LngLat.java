@@ -41,7 +41,33 @@ public record LngLat(
             }
         }
 
-
+        // this part handles points on the edges
+        // (treats them as being inside the central area)
+        for (LngLat corner1 : corners)
+        {
+            for (LngLat corner2 : corners) {
+                // if the point is the same, just ignore it
+                if ((corner1.lng == corner2.lng) && (corner1.lat == corner2.lat)) {
+                    continue;
+                }
+                // for each 2 corners with the same longitude, if the given point also has that longitude
+                // check that the given point's latitude falls between the latitudes of the two corners
+                // (it is on the edge)
+                if ((corner1.lng == corner2.lng) && (corner1.lng == this.lng) &&
+                        (((this.lat > corner1.lat) && (this.lat < corner2.lat)) ||
+                                ((this.lat < corner1.lat) && (this.lat > corner2.lat)))) {
+                    return true;
+                }
+                // for each 2 corners with the same latitude, if the given point also has that latitude
+                // check that the given point's longitude falls between the longitudes of the two corners
+                // (it is on the edge)
+                if ((corner1.lat == corner2.lat) && (corner1.lat == this.lat) &&
+                        (((this.lng > corner1.lng) && (this.lng < corner2.lng)) ||
+                                ((this.lng < corner1.lng) && (this.lng > corner2.lng)))) {
+                    return true;
+                }
+            }
+        }
 
         // this part handles checking if a given point is inside the central area
         // (excluding edges, treats the central area like a polygon shape of any kind)
