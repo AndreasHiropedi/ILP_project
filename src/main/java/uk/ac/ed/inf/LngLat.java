@@ -47,28 +47,11 @@ public record LngLat(
         int j = 1;
         while (i < corners.size())
         {
-            // check that the given point's latitude falls between the latitudes of the two corners
-            boolean isLatitudeWithinRange = ((this.lat > corners.get(i).lat) && (this.lat < corners.get(j).lat))
-                    || ((this.lat < corners.get(i).lat) && (this.lat > corners.get(j).lat));
-            // check that the given point's longitude falls between the longitudes of the two corners
-            boolean isLongitudeWithinRange = ((this.lng > corners.get(i).lng) && (this.lng < corners.get(j).lng))
-                    || ((this.lng < corners.get(i).lng) && (this.lng > corners.get(j).lng));
-            // check for a vertical edge
-            if ((corners.get(i).lng == corners.get(j).lng) && (corners.get(i).lng == this.lng)
-                    && isLatitudeWithinRange)
-            {
-                return true;
-            }
-            // check for a horizontal edge
-            else if ((corners.get(i).lat == corners.get(j).lat) && (corners.get(i).lat == this.lat)
-                    && isLongitudeWithinRange)
-            {
-                return true;
-            }
-            // check for a diagonal edge
-            else if (((corners.get(j).lat - corners.get(i).lat) / (corners.get(j).lng - corners.get(i).lng)) ==
-                    ((this.lat - corners.get(i).lat) / (this.lng - corners.get(i).lng)) &&
-                    isLongitudeWithinRange && isLatitudeWithinRange)
+            LngLat corner1 = corners.get(i);
+            LngLat corner2 = corners.get(j);
+            // by definition of a straight line, if the distance from each end of the line
+            // to the point adds up to the total length of the line, then the point is on the line
+            if (this.distanceTo(corner1) + this.distanceTo(corner2) == corner1.distanceTo(corner2))
             {
                 return true;
             }
@@ -105,8 +88,8 @@ public record LngLat(
     public double distanceTo(LngLat location)
     {
         return Math.sqrt(
-                Math.pow( (this.lng - location.lng) , 2) + Math.pow( (this.lat - location.lat) , 2)
-        );
+                Math.pow( (this.lng - location.lng) , 2) +
+                        Math.pow( (this.lat - location.lat) , 2));
     }
 
     /**
