@@ -47,33 +47,28 @@ public record LngLat(
         int j = 1;
         while (i < corners.size())
         {
-            // for each 2 corners with the same longitude, if the given point also has that longitude
             // check that the given point's latitude falls between the latitudes of the two corners
-            // (it is on the edge)
-            if ((corners.get(i).lng == corners.get(j).lng) && (corners.get(i).lng == this.lng) &&
-                    (((this.lat > corners.get(i).lat) && (this.lat < corners.get(j).lat)) ||
-                            ((this.lat < corners.get(i).lat) && (this.lat > corners.get(j).lat))))
-            {
-                return true;
-            }
-            // for each 2 corners with the same latitude, if the given point also has that latitude
+            boolean isLatitudeWithinRange = ((this.lat > corners.get(i).lat) && (this.lat < corners.get(j).lat))
+                    || ((this.lat < corners.get(i).lat) && (this.lat > corners.get(j).lat));
             // check that the given point's longitude falls between the longitudes of the two corners
-            // (it is on the edge)
-            else if ((corners.get(i).lat == corners.get(j).lat) && (corners.get(i).lat == this.lat) &&
-                    (((this.lng > corners.get(i).lng) && (this.lng < corners.get(j).lng)) ||
-                            ((this.lng < corners.get(i).lng) && (this.lng > corners.get(j).lng))))
+            boolean isLongitudeWithinRange = ((this.lng > corners.get(i).lng) && (this.lng < corners.get(j).lng))
+                    || ((this.lng < corners.get(i).lng) && (this.lng > corners.get(j).lng));
+            // check for a vertical edge
+            if ((corners.get(i).lng == corners.get(j).lng) && (corners.get(i).lng == this.lng)
+                    && isLatitudeWithinRange)
             {
                 return true;
             }
-            // if an edge is diagonal, check that the point lies on that edge using the line gradient
-            // ensure the longitude of the point is between the longitudes of the two corners
-            // ensure the latitude of the point is between the latitudes of the two corners
+            // check for a horizontal edge
+            else if ((corners.get(i).lat == corners.get(j).lat) && (corners.get(i).lat == this.lat)
+                    && isLongitudeWithinRange)
+            {
+                return true;
+            }
+            // check for a diagonal edge
             else if (((corners.get(j).lat - corners.get(i).lat) / (corners.get(j).lng - corners.get(i).lng)) ==
                     ((this.lat - corners.get(i).lat) / (this.lng - corners.get(i).lng)) &&
-                    (((this.lng > corners.get(i).lng) && (this.lng < corners.get(j).lng)) ||
-                            ((this.lng < corners.get(i).lng) && (this.lng > corners.get(j).lng))) &&
-                    (((this.lat > corners.get(i).lat) && (this.lat < corners.get(j).lat)) ||
-                            ((this.lat < corners.get(i).lat) && (this.lat > corners.get(j).lat))))
+                    isLongitudeWithinRange && isLatitudeWithinRange)
             {
                 return true;
             }
