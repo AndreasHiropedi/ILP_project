@@ -20,19 +20,6 @@ public class RetrieveData
     }
 
     /**
-     *
-     * @param baseURL
-     * @param className
-     * @return
-     * @param <T>
-     */
-    public<T> ArrayList<T> getData(URL baseURL, Class<T> className)
-    {
-        // TODO
-        return null;
-    }
-
-    /**
      * creates an instance of the singleton class
      * @return the instance of the singleton object
      */
@@ -43,6 +30,37 @@ public class RetrieveData
             retrieveData = new RetrieveData();
         }
         return retrieveData;
+    }
+
+    /**
+     *
+     * @param baseURL
+     * @param className
+     * @return
+     * @param <T>
+     */
+    public<T> ArrayList<T> getData(URL baseURL, Class<T> className)
+    {
+        String extension = "";
+        switch (className.toString())
+        {
+            case "LngLat":
+                extension = "/centralArea";
+            case "Restaurant":
+                extension = "/restaurants";
+            case "Order":
+                extension = "/orders";
+            default:
+                extension = "";
+        }
+        try
+        {
+            return new ObjectMapper().readValue(new URL(baseURL + extension), new TypeReference<>(){});
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
