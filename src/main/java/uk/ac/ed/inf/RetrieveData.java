@@ -41,7 +41,7 @@ public class RetrieveData
      */
     public<T> ArrayList<T> getData(URL baseURL, Class<T> className)
     {
-        String extension = "";
+        String extension;
         switch (className.toString())
         {
             case "LngLat":
