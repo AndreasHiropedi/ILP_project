@@ -27,9 +27,13 @@ public record LngLat(
     /**
      * checks if the current location is within the Central Campus area,
      * as read from the REST server
+     *
+     * Note: the implementation below is partly based on the following post
+     * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
      * @return true if the current location is in the Central Campus area, false otherwise
      */
-    public boolean inCentralArea() throws MalformedURLException {
+    public boolean inCentralArea() throws MalformedURLException 
+    {
         // get the central area from the singleton class
         List<LngLat> corners = CentralArea.getInstance().getCentralArea();
 
