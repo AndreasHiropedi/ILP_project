@@ -4,6 +4,9 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInfo;
+
+import java.net.MalformedURLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestLngLat
@@ -24,10 +27,11 @@ public class TestLngLat
     LngLat point8 = new LngLat(-4,55.946233);
     LngLat point9 = new LngLat(-3.184330, 55.942620);
     LngLat point10 = new LngLat(-4, -60);
+    LngLat point11 = new LngLat(-3.192623,55.946233);
 
     @Test
     @DisplayName("Testing different scenarios for inCentralArea method")
-    public void testInCentralArea()
+    public void testInCentralArea() throws MalformedURLException
     {
         assertTrue(point1.inCentralArea());
         assertTrue(point2.inCentralArea());
@@ -39,6 +43,7 @@ public class TestLngLat
         assertFalse(point7.inCentralArea());
         assertFalse(point8.inCentralArea());
         assertFalse(point10.inCentralArea());
+        assertFalse(point11.inCentralArea());
         System.out.println("Central area method works as expected!");
     }
 
@@ -58,6 +63,7 @@ public class TestLngLat
     {
         assertTrue(point1.closeTo(point1));
         assertFalse(point1.closeTo(point2));
+        assertFalse(point1.closeTo(point11));
         System.out.println("CloseTo method works as expected!");
     }
 
