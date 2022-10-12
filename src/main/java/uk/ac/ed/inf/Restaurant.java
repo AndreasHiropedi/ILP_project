@@ -3,6 +3,7 @@ import java.net.URL;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * this class is used to store the details of
@@ -42,7 +43,8 @@ public record Restaurant(
      */
     public static Restaurant[] getRestaurantsFromRestServer(URL serverBaseAddress)
     {
-        List<Restaurant> restaurants = RetrieveData.getInstance().retrieveRestaurantData(serverBaseAddress);
+        List<Restaurant> restaurants = RetrieveData.getData(
+                serverBaseAddress, "/restaurants", new TypeReference<>(){});
         return restaurants.toArray(new Restaurant[0]);
     }
 
