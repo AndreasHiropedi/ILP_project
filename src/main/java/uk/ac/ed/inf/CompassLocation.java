@@ -1,5 +1,9 @@
 package uk.ac.ed.inf;
 
+/**
+ * an enum class indicating all the directions
+ * in which the drone can move
+ */
 public enum CompassLocation
 {
     EAST,
@@ -19,3 +23,4 @@ public enum CompassLocation
     SOUTH_EAST,
     EAST_SOUTH_EAST
 }
+
