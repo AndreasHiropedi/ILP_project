@@ -1,7 +1,8 @@
 package uk.ac.ed.inf;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.util.List;
 
 /**
  * this class is used to represent locations on the map
@@ -28,8 +29,9 @@ public record LngLat(
      * as read from the REST server
      * @return true if the current location is in the Central Campus area, false otherwise
      */
-    public boolean inCentralArea() {
-        ArrayList<LngLat> corners = RetrieveData.getInstance().retrieveCentralArea();
+    public boolean inCentralArea() throws MalformedURLException {
+        // get the central area from the singleton class
+        List<LngLat> corners = CentralArea.getInstance().getCentralArea();
 
         // this part handles exact corners
         // (treats them as being inside the central area)
