@@ -46,6 +46,7 @@ public record LngLat(
         // (treats them as being inside the central area)
         for (LngLat corner: corners)
         {
+
             if ( (this.lng == corner.lng) && (this.lat == corner.lat) )
             {
                 return true;
