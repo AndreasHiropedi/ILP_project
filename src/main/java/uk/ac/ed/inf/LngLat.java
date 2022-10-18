@@ -25,6 +25,11 @@ public record LngLat(
     private static final double ACCEPTABLE_DISTANCE = 0.00015;
 
     /**
+     * this constant store the length of a drone move (in degrees)
+     */
+    private static final double DRONE_MOVE_LENGTH = 0.00015;
+
+    /**
      * checks if the current location is within the Central Campus area,
      * as read from the REST server
      *
@@ -32,7 +37,7 @@ public record LngLat(
      * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
      * @return true if the current location is in the Central Campus area, false otherwise
      */
-    public boolean inCentralArea() throws MalformedURLException 
+    public boolean inCentralArea() throws MalformedURLException
     {
         // get the central area from the singleton class
         List<LngLat> corners = CentralArea.getInstance().getCentralArea();
@@ -126,8 +131,8 @@ public record LngLat(
         }
         // converts the compass direction to an angle (in degrees)
         double angle = position.ordinal() * 22.5;
-        double lng = this.lng + ACCEPTABLE_DISTANCE * Math.cos(Math.toRadians(angle));
-        double lat = this.lat + ACCEPTABLE_DISTANCE * Math.sin(Math.toRadians(angle));
+        double lng = this.lng + DRONE_MOVE_LENGTH * Math.cos(Math.toRadians(angle));
+        double lat = this.lat + DRONE_MOVE_LENGTH * Math.sin(Math.toRadians(angle));
         return new LngLat(lng, lat);
     }
 
