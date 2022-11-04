@@ -1,5 +1,7 @@
 package uk.ac.ed.inf;
 
+import exceptions.InvalidPizzaCombinationException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
