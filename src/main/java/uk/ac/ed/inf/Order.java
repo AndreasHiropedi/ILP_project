@@ -31,7 +31,7 @@ public class Order
     @JsonProperty("orderItems")
     private List<String> orderItems;
 
-    // this field is used to filter out invalid orders
+    // this field is used to update the status of each order
     private OrderOutcome outcome;
 
     /**
@@ -63,7 +63,44 @@ public class Order
         this.orderItems = orderItems;
     }
 
-    
+    /**
+     *
+     * @return
+     */
+    public boolean validCreditCardDetails()
+    {
+        // TODO
+        if (outcome != null)
+        {
+            outcome = OrderOutcome.InvalidCardNumber;
+            return false;
+        }
+        else if (customer != null)
+        {
+            outcome = OrderOutcome.InvalidExpiryDate;
+            return false;
+        }
+        else if (orderNo != null)
+        {
+            outcome = OrderOutcome.InvalidCvv;
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isOrderValid()
+    {
+        if (!validCreditCardDetails())
+        {
+            return false;
+        }
+        outcome = OrderOutcome.ValidButNotDelivered;
+        return true;
+    }
 
     /**
      * computes the cost, in pence, of all items selected
@@ -104,6 +141,7 @@ public class Order
             }
         }
         // if no single restaurant can provide all pizzas, throw an exception
+        outcome = OrderOutcome.InvalidPizzaCombinationMultipleSuppliers;
         throw new InvalidPizzaCombinationException("This pizza combination is invalid!");
     }
 
