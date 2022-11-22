@@ -1,16 +1,17 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import exceptions.InvalidPizzaCombinationException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
  * this class is used to store all the information about orders
- * from the REST server
+ * from the REST server, plus information about the outcome of each order
  */
 public class Order
 {
@@ -63,24 +64,187 @@ public class Order
         this.orderItems = orderItems;
     }
 
+    // =========================================================================
+    // ================================ GETTERS ================================
+    // =========================================================================
+
     /**
-     *
-     * @return
+     * getter method for the order number field
+     * @return order number (as a string)
+     */
+    public String getOrderNo()
+    {
+        return orderNo;
+    }
+
+    /**
+     * getter method for the order date field
+     * @return order date (as a string)
+     */
+    public String getOrderDate()
+    {
+        return orderDate;
+    }
+
+    /**
+     * getter method for the customer field
+     * @return customer (as a string)
+     */
+    public String getCustomer()
+    {
+        return customer;
+    }
+
+    /**
+     * getter method for the credit card number field
+     * @return credit card number (as a string)
+     */
+    public String getCreditCardNumber()
+    {
+        return creditCardNumber;
+    }
+
+    /**
+     * getter method for the credit card expiry date field
+     * @return credit card expiry date (as a string)
+     */
+    public String getCreditCardExpiry()
+    {
+        return creditCardExpiry;
+    }
+
+    /**
+     * getter method for the credit card cvv number field
+     * @return cvv number (as a string)
+     */
+    public String getCvv()
+    {
+        return cvv;
+    }
+
+    /**
+     * getter method for the total price in pence field
+     * (obtained from REST server)
+     * @return total price in pence (as an int)
+     */
+    public int getPriceTotalInPence()
+    {
+        return priceTotalInPence;
+    }
+
+    /**
+     * getter method for the order items field
+     * @return order items (as a list of strings)
+     */
+    public List<String> getOrderItems()
+    {
+        return orderItems;
+    }
+
+    /**
+     * getter method for the order outcome field
+     * @return outcome of the order
+     */
+    public OrderOutcome getOutcome()
+    {
+        return outcome;
+    }
+
+    // =========================================================================
+    // =========================== ORDER VALIDATION ============================
+    // =========================================================================
+
+    /**
+     * validation method for the credit card number
+     * Note: the implementation below is partly based on the following post
+     * <a href = "https://howtodoinjava.com/java/regex/java-regex-validate-credit-card-numbers/">link</a>
+     * @return true if the credit card number is valid,
+     * false otherwise
+     */
+    public boolean validCreditCardNumber()
+    {
+        // cardValidationRegex that stores information about valid card numbers
+        // based on different providers
+        String cardValidationRegex = "^(?:(?<visa>4[0-9]{12}(?:[0-9]{3})?)|" +
+                "(?<mastercard>5[1-5][0-9]{14})|" +
+                "(?<discover>6(?:011|5[0-9]{2})[0-9]{12})|" +
+                "(?<amex>3[47][0-9]{13})|" +
+                "(?<diners>3(?:0[0-5]|[68][0-9])?[0-9]{11})|" +
+                "(?<jcb>(?:2131|1800|35[0-9]{3})[0-9]{11}))$";
+        // create a pattern and matcher for the regex and card number
+        // (to see if there is a match)
+        Pattern pattern = Pattern.compile(cardValidationRegex);
+        Matcher matcher = pattern.matcher(creditCardNumber);
+        // this part is the Luhn algorithm for credit card number validation
+        int luhnSum = 0;
+        boolean shouldBeDoubled = false;
+        // starting from last digit and going to the first
+        for (int i = creditCardNumber.length() - 1; i >= 0; i--)
+        {
+            // get each individual digit from the card number
+            int currentDigit = Integer.parseInt(creditCardNumber.substring(i, i + 1));
+            // check if it should be doubled, and if so, double it
+            if (shouldBeDoubled)
+            {
+                currentDigit *= 2;
+                // check the new result is a single digit number
+                if (currentDigit > 9)
+                {
+                    // if not, convert it to a single digit number
+                    currentDigit = (currentDigit % 10) + 1;
+                }
+            }
+            // append the computed current digit to the sum of digits
+            luhnSum += currentDigit;
+            // and switch the value of the flag
+            shouldBeDoubled = !shouldBeDoubled;
+        }
+        // if there is a match in terms of card pattern
+        // and the Luhn checksum algorithm passes
+        // then the credit card number is valid
+        return matcher.matches() && (luhnSum % 10 == 0);
+    }
+
+    /**
+     * validation method for the credit card expiry date
+     * @return true if the credit card expiry is valid,
+     * false otherwise
+     */
+    public boolean validExpiryDate()
+    {
+        // TODO
+        return true;
+    }
+
+    /**
+     * validation method for the credit card cvv number
+     * @return true if the credit card cvv number is valid,
+     * false otherwise
+     */
+    public boolean validCvv()
+    {
+        // TODO
+        return true;
+    }
+
+    /**
+     * check if all components of the card (i.e. card number,
+     * expiry date, cvv) are valid, and update the order outcome
+     * @return true if the card details are all valid, false otherwise
      */
     public boolean validCreditCardDetails()
     {
-        // TODO
-        if (outcome != null)
+        if (!validCreditCardNumber())
         {
             outcome = OrderOutcome.InvalidCardNumber;
             return false;
         }
-        else if (customer != null)
+        else if (!validExpiryDate())
         {
             outcome = OrderOutcome.InvalidExpiryDate;
             return false;
         }
-        else if (orderNo != null)
+        else if (!validCvv())
         {
             outcome = OrderOutcome.InvalidCvv;
             return false;
@@ -102,6 +266,10 @@ public class Order
         return true;
     }
 
+    // =========================================================================
+    // ========================== OTHER CLASS METHODS ==========================
+    // =========================================================================
+
     /**
      * computes the cost, in pence, of all items selected
      * from all the different restaurants, plus a charge of
@@ -112,7 +280,7 @@ public class Order
      * @return the total cost (in pence) of all these items,
      * including delivery charges
      */
-    public int getDeliveryCost(Restaurant[] participants, String... allPizzas) throws InvalidPizzaCombinationException {
+    public int getDeliveryCost(Restaurant[] participants, String... allPizzas){
         int totalInPence = 0;
         for (Restaurant participant : participants)
         {
@@ -136,13 +304,10 @@ public class Order
                         }
                     }
                 }
-                // also include the £1 delivery fee
-                return totalInPence + 100;
             }
         }
-        // if no single restaurant can provide all pizzas, throw an exception
-        outcome = OrderOutcome.InvalidPizzaCombinationMultipleSuppliers;
-        throw new InvalidPizzaCombinationException("This pizza combination is invalid!");
+        // also include the £1 delivery fee
+        return totalInPence + 100;
     }
 
 }
