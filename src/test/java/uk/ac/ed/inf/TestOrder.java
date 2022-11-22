@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import exceptions.InvalidPizzaCombinationException;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestOrder
 {
-    
+
     public TestOrder() throws MalformedURLException
     {
 
@@ -40,16 +41,16 @@ public class TestOrder
 
     @Test
     @DisplayName("Testing different scenarios for getDeliveryCost method")
-    public void testGetDeliveryCost() throws InvalidPizzaCombinationException 
+    public void testGetDeliveryCost() throws InvalidPizzaCombinationException
     {
-        String item1 = order1.orderItems().get(0);
-        String item2 = order1.orderItems().get(1);
+        String item1 = order1.getOrderItems().get(0);
+        String item2 = order1.getOrderItems().get(1);
         assertEquals(2600, order1.getDeliveryCost(restaurants, item1, item2));
-        item1 = order2.orderItems().get(0);
-        item2 = order2.orderItems().get(1);
+        item1 = order2.getOrderItems().get(0);
+        item2 = order2.getOrderItems().get(1);
         assertEquals(2400, order2.getDeliveryCost(restaurants, item1, item2));
-        item1 = order3.orderItems().get(0);
-        item2 = order3.orderItems().get(1);
+        item1 = order3.getOrderItems().get(0);
+        item2 = order3.getOrderItems().get(1);
         assertEquals(2500, order3.getDeliveryCost(restaurants, item1, item2));
         // test also for the exception
         String finalItem = item1;
