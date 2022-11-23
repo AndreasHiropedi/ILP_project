@@ -2,6 +2,8 @@ package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -163,14 +165,15 @@ public class Order
      */
     public boolean validCreditCardNumber()
     {
+        // check if string is empty
+        if (creditCardNumber == null)
+        {
+            return false;
+        }
         // cardValidationRegex that stores information about valid card numbers
         // based on different providers
         String cardValidationRegex = "^(?:(?<visa>4[0-9]{12}(?:[0-9]{3})?)|" +
-                "(?<mastercard>5[1-5][0-9]{14})|" +
-                "(?<discover>6(?:011|5[0-9]{2})[0-9]{12})|" +
-                "(?<amex>3[47][0-9]{13})|" +
-                "(?<diners>3(?:0[0-5]|[68][0-9])?[0-9]{11})|" +
-                "(?<jcb>(?:2131|1800|35[0-9]{3})[0-9]{11}))$";
+                "(?<mastercard>5[1-5][0-9]{14}))$";
         // create a pattern and matcher for the regex and card number
         // (to see if there is a match)
         Pattern pattern = Pattern.compile(cardValidationRegex);
@@ -212,8 +215,19 @@ public class Order
      */
     public boolean validExpiryDate()
     {
-        // TODO
-        return true;
+        // check if either string is empty
+        if (creditCardExpiry == null || orderDate == null)
+        {
+            return false;
+        }
+        // convert the order date to a date object
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime orderDateObject = LocalDateTime.parse(orderDate, formatter);
+        //
+        String convertedDate = convertExpiryDate();
+        LocalDateTime expiryDateFormat = LocalDateTime.parse(convertedDate, formatter);
+        //
+        return !expiryDateFormat.isBefore(orderDateObject);
     }
 
     /**
@@ -223,8 +237,19 @@ public class Order
      */
     public boolean validCvv()
     {
-        // TODO
-        return true;
+        // check if string is empty
+        if (cvv == null)
+        {
+            return false;
+        }
+        // Regex to check for valid CVV number combinations
+        String regex = "^[0-9]{3,4}$";
+        // create a pattern and matcher for the regex and card number
+        // (to see if there is a match)
+        Pattern p = Pattern.compile(regex);
+        Matcher matcher = p.matcher(cvv);
+        // return true if there is a match between the cvv and the regex
+        return matcher.matches();
     }
 
     /**
@@ -253,12 +278,17 @@ public class Order
     }
 
     /**
-     *
-     * @return
+     * check if the order is valid, and update the order outcome accordingly
+     * @return true if an order is valid, false otherwise
      */
     public boolean isOrderValid()
     {
-        if (!validCreditCardDetails())
+        if (orderNo == null || orderDate == null || customer == null)
+        {
+            outcome = OrderOutcome.Invalid;
+            return false;
+        }
+        else if (!validCreditCardDetails())
         {
             return false;
         }
@@ -269,6 +299,63 @@ public class Order
     // =========================================================================
     // ========================== OTHER CLASS METHODS ==========================
     // =========================================================================
+
+    /**
+     * given a month and a year (to account for leap years),
+     * return the number of the last day of the given month
+     * @param month the month number as a string
+     * @param year the year number as a string
+     * @return the last day of the given month as a string
+     */
+    public String findLastDayOfMonth(String month, String year)
+    {
+        // check if the month is february and the year is a leap year
+        if (month.equals("02") && Integer.parseInt(year) % 4 == 0)
+        {
+            return "29";
+        }
+        // check if the month is february (non-leap year)
+        else if (month.equals("02"))
+        {
+            return "28";
+        }
+        // check if the month has 30 days (april, june, september, november)
+        else if (month.equals("04") || month.equals("06") ||
+                month.equals("09") || month.equals("11"))
+        {
+            return "30";
+        }
+        // if none of the other cases apply, the month must have 31 days
+        return "31";
+    }
+
+    /**
+     * convert a credit card expiry date (format mm/yy) into
+     * a date in the format yyyy/mm/dd
+     * (using the last day of the month for the dd part)
+     * @return the newly formatted credit card expiry date
+     * (as a string yyyy/mm/dd)
+     */
+    public String convertExpiryDate()
+    {
+        String new_date = "";
+        // regex to check that the expiry date is in the format mm/yy
+        String regex = "^((0[1-9])|(1[0-2]))/*((0[0-9])|(1[0-9]))$";
+        // create a pattern matcher for the regex
+        Pattern p = Pattern.compile(regex);
+        Matcher matcher = p.matcher(creditCardExpiry);
+        // check if the credit card expiry date matches the regex
+        if (matcher.matches())
+        {
+            // if it does, break it down into year, month and day
+            String year = "20" + creditCardExpiry.substring(3);
+            String month = creditCardExpiry.substring(0, 2);
+            String day = findLastDayOfMonth(month, year);
+            // and assemble the newly formatted date string
+            new_date = year + "-" + month + "-" + day;
+        }
+        return new_date;
+    }
 
     /**
      * computes the cost, in pence, of all items selected
