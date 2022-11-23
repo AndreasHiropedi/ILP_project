@@ -223,10 +223,16 @@ public class Order
         // convert the order date to a date object
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime orderDateObject = LocalDateTime.parse(orderDate, formatter);
-        //
+        // convert the credit card expiry date into yyyy-mm-dd format
         String convertedDate = convertExpiryDate();
+        // check if the returned string is empty
+        if (convertedDate == null)
+        {
+            return false;
+        }
+        // if it's not, parse it as a date
         LocalDateTime expiryDateFormat = LocalDateTime.parse(convertedDate, formatter);
-        //
+        // and check if the expiry date is not before the order date (making the expiry date valid)
         return !expiryDateFormat.isBefore(orderDateObject);
     }
 
@@ -283,15 +289,18 @@ public class Order
      */
     public boolean isOrderValid()
     {
+        // check if there are missing details, and if so, mark the order as invalid
         if (orderNo == null || orderDate == null || customer == null)
         {
             outcome = OrderOutcome.Invalid;
             return false;
         }
+        // check if the credit card details are valid, and update the outcome accordingly
         else if (!validCreditCardDetails())
         {
             return false;
         }
+        // if all checks pass, then the order is valid
         outcome = OrderOutcome.ValidButNotDelivered;
         return true;
     }
