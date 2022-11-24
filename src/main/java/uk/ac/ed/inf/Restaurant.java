@@ -1,4 +1,5 @@
 package uk.ac.ed.inf;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -38,13 +39,19 @@ public record Restaurant(
     /**
      * returns an array of all participating restaurants (including their menus)
      * using the REST server
-     * @param serverBaseAddress the URL address of the REST server
      * @return all existing restaurants, as an array of Restaurant objects
      */
-    public static Restaurant[] getRestaurantsFromRestServer(URL serverBaseAddress)
-    {
-        List<Restaurant> restaurants = RetrieveData.getData(
-                serverBaseAddress, "/restaurants", new TypeReference<>(){});
+    public static Restaurant[] getRestaurantsFromRestServer() {
+        List<Restaurant> restaurants;
+        try
+        {
+            restaurants = RetrieveData.getData(
+                    new URL("https://ilp-rest.azurewebsites.net"), "/restaurants", new TypeReference<>(){});
+        }
+        catch (MalformedURLException e)
+        {
+            throw new RuntimeException(e);
+        }
         return restaurants.toArray(new Restaurant[0]);
     }
 

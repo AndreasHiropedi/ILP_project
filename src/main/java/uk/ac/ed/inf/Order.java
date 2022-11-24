@@ -26,9 +26,8 @@ public class Order
     // this field is used to update the status of each order
     private OrderOutcome outcome;
 
-    // TODO: define the restaurants list once REST retrieval is fixed
     // a list of all restaurants on the PizzaDronz app
-    public static Restaurant[] restaurants;
+    public static Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer();
 
     // a list containing all orders that are deemed valid
     public static ArrayList<Order> validOrders;
