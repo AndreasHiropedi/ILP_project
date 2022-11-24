@@ -29,9 +29,7 @@ public class TestOrder
         System.out.println(testInfo.getDisplayName());
     }
 
-    URL base = new URL("https://ilp-rest.azurewebsites.net");
-    Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer(base);
-    ArrayList<Order> orders = RetrieveData.getData(base, "/orders", new TypeReference<>(){});
+    ArrayList<Order> orders = RetrieveData.getData(new URL("https://ilp-rest.azurewebsites.net"), "/orders", new TypeReference<>(){});
     Order order1 = orders.get(0);
     Order order2 = orders.get(2);
     Order order3 = orders.get(11);

@@ -24,8 +24,7 @@ public class TestRestaurant
         System.out.println(testInfo.getDisplayName());
     }
 
-    URL base = new URL("https://ilp-rest.azurewebsites.net");
-    Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer(base);
+    Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer();
     List<Restaurant> restaurantsList = Arrays.stream(restaurants).toList();
     Restaurant restaurant1 = restaurantsList.get(2);
 
