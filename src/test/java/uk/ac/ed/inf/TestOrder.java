@@ -43,22 +43,9 @@ public class TestOrder
     @DisplayName("Testing different scenarios for getDeliveryCost method")
     public void testGetDeliveryCost() throws InvalidPizzaCombinationException
     {
-        String item1 = order1.getOrderItems().get(0);
-        String item2 = order1.getOrderItems().get(1);
-        assertEquals(2600, order1.getDeliveryCost(restaurants, item1, item2));
-        item1 = order2.getOrderItems().get(0);
-        item2 = order2.getOrderItems().get(1);
-        assertEquals(2400, order2.getDeliveryCost(restaurants, item1, item2));
-        item1 = order3.getOrderItems().get(0);
-        item2 = order3.getOrderItems().get(1);
-        assertEquals(2500, order3.getDeliveryCost(restaurants, item1, item2));
-        // test also for the exception
-        String finalItem = item1;
-        String finalItem1 = item2;
-        InvalidPizzaCombinationException exception = assertThrows(InvalidPizzaCombinationException.class,
-                () -> order1.getDeliveryCost(new Restaurant[]{restaurants1}, finalItem, finalItem1),
-                "Didn't throw the exception");
-        assertTrue(exception.getMessage().contains("This pizza combination is invalid!"));
+        assertEquals(2600, order1.getDeliveryCost());
+        assertEquals(2400, order2.getDeliveryCost());
+        assertEquals(2500, order3.getDeliveryCost());
         System.out.println("GetDeliveryCost method works as expected!");
     }
 
