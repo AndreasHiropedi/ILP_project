@@ -238,14 +238,21 @@ public class Order
         int totalInPence = 0;
         // a list to keep track of all available pizzas on the PizzaDronz app
         ArrayList<String> allAvailablePizzas = new ArrayList<>();
+        // fill up the all available pizzas list
+        for (Restaurant restaurant: restaurants)
+        {
+            // save the names of those Menu objects as a list of strings
+            ArrayList<String> restaurantMenu = new ArrayList<>(Arrays.stream(restaurant.getMenu()).map(Menu::name).toList());
+            // and add all the restaurant's menu items to the list of all available pizzas on the app
+            allAvailablePizzas.addAll(restaurantMenu);
+        }
+        // check to see if a single restaurant can deliver all the ordered items
         for (Restaurant participant : restaurants)
         {
             // get all menu items as Menu objects
             List<Menu> menuItems = Arrays.stream(participant.getMenu()).toList();
             // save the names of those Menu objects as a list of strings
             ArrayList<String> restaurantMenu = new ArrayList<>(Arrays.stream(participant.getMenu()).map(Menu::name).toList());
-            // and add all the restaurant's menu items to the list of all available pizzas on the app
-            allAvailablePizzas.addAll(restaurantMenu);
             // if a restaurant's menu has all the order items
             if (restaurantMenu.containsAll(orderItems))
             {
@@ -262,6 +269,8 @@ public class Order
                         }
                     }
                 }
+                // and break the loop, since all items have now been accounted for
+                break;
             }
             // set the order outcome field to mark an invalid pizza combination
             else
@@ -269,7 +278,7 @@ public class Order
                 outcome = OrderOutcome.InvalidPizzaCombinationMultipleSuppliers;
             }
         }
-        // check that all pizza items ordered actually exist
+        // check that all pizza items ordered actually exist on the PizzaDronz app
         // and update the order outcome accordingly
         if (!allOrderedPizzasExists(allAvailablePizzas))
         {
