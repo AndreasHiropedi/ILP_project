@@ -192,6 +192,44 @@ public class Order
     // =========================================================================
 
     /**
+     * check that all the pizzas being ordered are available on the PizzaDronz app
+     * @param allAvailablePizzas a list of the names all pizzas available on the
+     *                           PizzaDronz app
+     * @return true if all ordered items are pizzas available on the app,
+     * false otherwise
+     */
+    public boolean allOrderedPizzasExists(ArrayList<String> allAvailablePizzas)
+    {
+        // flag to keep track in case we find a pizza that doesn't exist
+        boolean allPizzasExist = true;
+        // check all order items
+        for (String item: orderItems)
+        {
+            // used to keep track of whether we find a match for each item ordered
+            int count = 0;
+            // check all existing pizzas in the app
+            for (String pizza: allAvailablePizzas)
+            {
+                // if a match is found, break the loop
+                if (item.equals(pizza))
+                {
+                    break;
+                }
+                // otherwise update the counter variable
+                count += 1;
+            }
+            // if we have been through the whole list and no match was found
+            if (count == allAvailablePizzas.size())
+            {
+                // update the flag to indicate an undefined pizza was found, and break the loop
+                allPizzasExist = false;
+                break;
+            }
+        }
+        return allPizzasExist;
+    }
+
+    /**
      * computes the cost, in pence, of all order items
      * plus a charge of £1 (100 pence) per delivery
      * @return the total cost (in pence) of all these items,
@@ -199,14 +237,21 @@ public class Order
      */
     public int getDeliveryCost(){
         int totalInPence = 0;
+        // a list to keep track of all available pizzas on the PizzaDronz app
+        ArrayList<String> allAvailablePizzas = new ArrayList<>();
         for (Restaurant participant : restaurants)
         {
             // get all menu items as Menu objects
             List<Menu> menuItems = Arrays.stream(participant.getMenu()).toList();
             // save the names of those Menu objects as a list of strings
-            ArrayList<String> pizzas = new ArrayList<>(Arrays.stream(participant.getMenu()).map(Menu::name).toList());
-            if (pizzas.containsAll(orderItems))
+            ArrayList<String> restaurantMenu = new ArrayList<>(Arrays.stream(participant.getMenu()).map(Menu::name).toList());
+            // and add all the restaurant's menu items to the list of all available pizzas on the app
+            allAvailablePizzas.addAll(restaurantMenu);
+            // if a restaurant's menu has all the order items
+            if (restaurantMenu.containsAll(orderItems))
             {
+                // reset the order outcome field
+                outcome = null;
                 // add the price for each individual item to the total
                 for (Menu item: menuItems)
                 {
@@ -219,6 +264,17 @@ public class Order
                     }
                 }
             }
+            // set the order outcome field to mark an invalid pizza combination
+            else
+            {
+                outcome = OrderOutcome.InvalidPizzaCombinationMultipleSuppliers;
+            }
+        }
+        // check that all pizza items ordered actually exist
+        // and update the order outcome accordingly
+        if (!allOrderedPizzasExists(allAvailablePizzas))
+        {
+            outcome = OrderOutcome.InvalidPizzaNotDefined;
         }
         // include the £1 delivery fee
         return totalInPence + 100;
