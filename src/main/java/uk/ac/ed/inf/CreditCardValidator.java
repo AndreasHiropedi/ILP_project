@@ -180,7 +180,7 @@ public class CreditCardValidator
             return false;
         }
         // Regex to check for valid CVV number combinations
-        String regex = "^[0-9]{3,4}$";
+        String regex = "^[0-9]{3}$";
         // create a pattern and matcher for the regex and card number
         // (to see if there is a match)
         Pattern p = Pattern.compile(regex);
