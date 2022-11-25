@@ -15,24 +15,24 @@ public class NoFlyZone
 {
     // all the information from the REST server
     @JsonProperty("coordinates")
-    private ArrayList<ArrayList<Double>> noFlyZoneEdges;
+    private ArrayList<ArrayList<Double>> noFlyZoneEdgesAsDoubles;
 
     // a list that stores the edges of each no-fly-zone
     // as LngLat objects
-    private ArrayList<LngLat> noFlyZone;
+    private ArrayList<LngLat> noFlyZoneEdges;
 
     // a list of all the no-fly-zones from the REST server
     public static ArrayList<NoFlyZone> allNoFlyZones;
 
     /**
      * constructor for the no-fly-zone values
-     * @param noFlyZoneEdges the list of edges for a no-fly-zone object
+     * @param noFlyZoneEdgesAsDoubles the list of edges for a no-fly-zone object
      *                       from the REST server
      */
-    public NoFlyZone(ArrayList<ArrayList<Double>> noFlyZoneEdges)
+    public NoFlyZone(ArrayList<ArrayList<Double>> noFlyZoneEdgesAsDoubles)
     {
-        this.noFlyZoneEdges = noFlyZoneEdges;
-        this.noFlyZone = generateNoFlyZone();
+        this.noFlyZoneEdgesAsDoubles = noFlyZoneEdgesAsDoubles;
+        this.noFlyZoneEdges = generateNoFlyZoneEdges();
         allNoFlyZones.add(this);
     }
 
@@ -42,9 +42,9 @@ public class NoFlyZone
      * @return the class field storing the edges of the
      * no-fly-zone as LngLat objects
      */
-    public ArrayList<LngLat> getNoFlyZone()
+    public ArrayList<LngLat> getNoFlyZoneEdges()
     {
-        return noFlyZone;
+        return noFlyZoneEdges;
     }
 
     /**
@@ -52,27 +52,14 @@ public class NoFlyZone
      * which stores the edges as LngLat objects
      * @return the newly populated LngLat list
      */
-    public ArrayList<LngLat> generateNoFlyZone()
+    public ArrayList<LngLat> generateNoFlyZoneEdges()
     {
-        for (ArrayList<Double> edge: noFlyZoneEdges)
+        for (ArrayList<Double> edge: noFlyZoneEdgesAsDoubles)
         {
             LngLat point = new LngLat(edge.get(0), edge.get(1));
-            noFlyZone.add(point);
+            noFlyZoneEdges.add(point);
         }
-        return noFlyZone;
-    }
-
-    /**
-     * this method is used to check if a given point is
-     * inside any of the no-fly-zones
-     * @param point the point to be checked (as a LngLat object)
-     * @return true if the point is inside a no-fly-zone,
-     * false otherwise
-     */
-    public boolean insideNoFlyZone(LngLat point)
-    {
-        // TODO: implement this method
-        return true;
+        return noFlyZoneEdges;
     }
 
 }

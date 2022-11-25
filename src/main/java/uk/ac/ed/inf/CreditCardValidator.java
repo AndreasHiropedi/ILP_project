@@ -27,7 +27,7 @@ public class CreditCardValidator
     /**
      * validation method for the credit card number
      * Note: the implementation below is partly based on the following post
-     * <a href = "https://howtodoinjava.com/java/regex/java-regex-validate-credit-card-numbers/">link</a>
+     * <a href = "https://www.baeldung.com/java-validate-cc-number">link</a>
      * @return true if the credit card number is valid,
      * false otherwise
      */
@@ -39,14 +39,16 @@ public class CreditCardValidator
         {
             return false;
         }
-        // cardValidationRegex that stores information about valid card numbers
+        // card validation regexes that stores information about valid card numbers
         // based on different providers
-        String cardValidationRegex = "^(?:(?<visa>4[0-9]{12}(?:[0-9]{3})?)|" +
-                "(?<mastercard>5[1-5][0-9]{14}))$";
-        // create a pattern and matcher for the regex and card number
+        String cardValidationVisa = "^4[0-9]{0,}$";
+        String cardValidationMasterCard = "^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[01]|2720)[0-9]{0,}$";
+        // create a pattern and matcher for the regexes and card number
         // (to see if there is a match)
-        Pattern pattern = Pattern.compile(cardValidationRegex);
-        Matcher matcher = pattern.matcher(creditCardNumber);
+        Pattern patternVisa = Pattern.compile(cardValidationVisa);
+        Pattern patternMasterCard = Pattern.compile(cardValidationMasterCard);
+        Matcher matcherVisa = patternVisa.matcher(creditCardNumber);
+        Matcher matcherMasterCard = patternMasterCard.matcher(creditCardNumber);
         // this part is the Luhn algorithm for credit card number validation
         int luhnSum = 0;
         boolean shouldBeDoubled = false;
@@ -74,7 +76,7 @@ public class CreditCardValidator
         // if there is a match in terms of card pattern
         // and the Luhn checksum algorithm passes
         // then the credit card number is valid
-        return matcher.matches() && (luhnSum % 10 == 0);
+        return (matcherVisa.matches() || matcherMasterCard.matches()) && (luhnSum % 10 == 0);
     }
 
     /**

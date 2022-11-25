@@ -1,7 +1,6 @@
 package uk.ac.ed.inf;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.net.MalformedURLException;
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public record LngLat(
      * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
      * @return true if the current location is in the Central Campus area, false otherwise
      */
-    public boolean inCentralArea() throws MalformedURLException
+    public boolean inCentralArea()
     {
         // get the central area from the singleton class
         List<LngLat> corners = CentralArea.getInstance().getCentralArea();
@@ -46,7 +45,6 @@ public record LngLat(
         // (treats them as being inside the central area)
         for (LngLat corner: corners)
         {
-
             if ( (this.lng == corner.lng) && (this.lat == corner.lat) )
             {
                 return true;
@@ -135,6 +133,18 @@ public record LngLat(
         double lng = this.lng + DRONE_MOVE_LENGTH * Math.cos(Math.toRadians(angle));
         double lat = this.lat + DRONE_MOVE_LENGTH * Math.sin(Math.toRadians(angle));
         return new LngLat(lng, lat);
+    }
+
+    /**
+     * checks if the current location is within any of the no-fly-zones
+     * Note: the implementation below is partly based on the following post
+     * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
+     * @return true if the current location is in a no-fly-zone, false otherwise
+     */
+    public boolean inNoFlyZone()
+    {
+        // TODO: implement this method
+        return true;
     }
 
 }
