@@ -29,18 +29,14 @@ public record LngLat(
     private static final double DRONE_MOVE_LENGTH = 0.00015;
 
     /**
-     * checks if the current location is within the Central Campus area,
-     * as read from the REST server
-     *
+     * checks if the current location is within a given polygon area
      * Note: the implementation below is partly based on the following post
      * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
-     * @return true if the current location is in the Central Campus area, false otherwise
+     * @param corners a list of the vertices of the polygon
+     * @return true if the current location is inside the polygon or on the edges, false otherwise
      */
-    public boolean inCentralArea()
+    private boolean inArea(List<LngLat> corners)
     {
-        // get the central area from the singleton class
-        List<LngLat> corners = CentralArea.getInstance().getCentralArea();
-
         // this part handles exact corners
         // (treats them as being inside the central area)
         for (LngLat corner: corners)
@@ -50,7 +46,6 @@ public record LngLat(
                 return true;
             }
         }
-
         // this part handles points on the edges
         // (treats them as being inside the central area)
         int i = 0;
@@ -73,7 +68,6 @@ public record LngLat(
                 j = 0;
             }
         }
-
         // this part handles checking if a given point is inside the central area
         // (excluding edges, treats the central area like a polygon shape of any kind)
         int a, b;
@@ -136,6 +130,19 @@ public record LngLat(
     }
 
     /**
+     * checks if the current location is within the central campus area
+     * based on information from the REST server
+     * @return true if the point is inside the central campus area,
+     * false otherwise
+     */
+    public boolean inCentralArea()
+    {
+        // get the central area from the singleton class
+        List<LngLat> corners = CentralArea.getInstance().getCentralArea();
+        return inArea(corners);
+    }
+
+    /**
      * checks if the current location is within any of the no-fly-zones
      * Note: the implementation below is partly based on the following post
      * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
@@ -143,8 +150,19 @@ public record LngLat(
      */
     public boolean inNoFlyZone()
     {
-        // TODO: implement this method
-        return true;
+        // get all the existing no-fly-zones
+        List<NoFlyZone> existingNoFlyZones = NoFlyZone.allNoFlyZones;
+        for (NoFlyZone noFlyZone: existingNoFlyZones)
+        {
+            // for each one, check to see if the current location is inside
+            // that no-fly-zone
+            List<LngLat> noFlyZoneCorners = noFlyZone.getNoFlyZoneEdges();
+            if (inArea(noFlyZoneCorners))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

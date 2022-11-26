@@ -86,7 +86,7 @@ public class CreditCardValidator
      * @param year the year number as a string
      * @return the last day of the given month as a string
      */
-    public String findLastDayOfMonth(String month, String year)
+    private String findLastDayOfMonth(String month, String year)
     {
         // check if the month is february and the year is a leap year
         if (month.equals("02") && Integer.parseInt(year) % 4 == 0)
@@ -115,7 +115,7 @@ public class CreditCardValidator
      * @return the newly formatted credit card expiry date
      * (as a string yyyy/mm/dd)
      */
-    public String convertExpiryDate()
+    private String convertExpiryDate()
     {
         String creditCardExpiry = orderToVerify.getCreditCardExpiry();
         //

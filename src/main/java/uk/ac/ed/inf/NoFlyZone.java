@@ -52,7 +52,7 @@ public class NoFlyZone
      * which stores the edges as LngLat objects
      * @return the newly populated LngLat list
      */
-    public ArrayList<LngLat> generateNoFlyZoneEdges()
+    private ArrayList<LngLat> generateNoFlyZoneEdges()
     {
         for (ArrayList<Double> edge: noFlyZoneEdgesAsDoubles)
         {

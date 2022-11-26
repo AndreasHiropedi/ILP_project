@@ -27,7 +27,7 @@ public class Order
     private OrderOutcome outcome;
 
     // a list of all restaurants on the PizzaDronz app
-    public static Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer();
+    private static Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer();
 
     // a list containing all orders that are deemed valid
     public static ArrayList<Order> validOrders;
@@ -154,7 +154,7 @@ public class Order
      * check if the order is valid, and update the order outcome accordingly
      * @return true if an order is valid, false otherwise
      */
-    public boolean isOrderValid()
+    private boolean isOrderValid()
     {
         // check if there are missing details, and if so, mark the order as invalid
         if (orderNo == null || orderDate == null || customer == null)
@@ -197,7 +197,7 @@ public class Order
      * @return true if all ordered items are pizzas available on the app,
      * false otherwise
      */
-    public boolean allOrderedPizzasExists(ArrayList<String> allAvailablePizzas)
+    private boolean allOrderedPizzasExists(ArrayList<String> allAvailablePizzas)
     {
         // flag to keep track in case we find a pizza that doesn't exist
         boolean allPizzasExist = true;
