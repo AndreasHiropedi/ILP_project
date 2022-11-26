@@ -56,6 +56,7 @@ public class NoFlyZone
     {
         for (ArrayList<Double> edge: noFlyZoneEdgesAsDoubles)
         {
+            // create a new LngLat object for each pair of co-ordinates
             LngLat point = new LngLat(edge.get(0), edge.get(1));
             noFlyZoneEdges.add(point);
         }
