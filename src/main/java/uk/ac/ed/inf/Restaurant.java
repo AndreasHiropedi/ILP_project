@@ -41,7 +41,8 @@ public record Restaurant(
      * using the REST server
      * @return all existing restaurants, as an array of Restaurant objects
      */
-    public static Restaurant[] getRestaurantsFromRestServer() {
+    public static Restaurant[] getRestaurantsFromRestServer() 
+    {
         List<Restaurant> restaurants;
         try
         {
