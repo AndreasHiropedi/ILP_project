@@ -288,4 +288,12 @@ public class Order
         return totalInPence + 100;
     }
 
+    /**
+     *
+     */
+    public void writeOrderToJson()
+    {
+        //TODO: implement this method
+    }
+
 }
