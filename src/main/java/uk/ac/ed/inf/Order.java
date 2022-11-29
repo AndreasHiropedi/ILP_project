@@ -289,7 +289,9 @@ public class Order
     }
 
     /**
-     *
+     * this method is used to write the order objects
+     * for a specific date (inputted in the command line)
+     * to a JSON file
      */
     public void writeOrderToJson()
     {
