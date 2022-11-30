@@ -46,17 +46,15 @@ public class JsonFileWriter
     public void writeFlightPathToJSON(FlightPath flightPath)
     {
         // add all the necessary information to the JSON object
-        // TODO: once FlightPath is implemented, fill in the rest of these
-        jsonObject.put("orderNo", "");
-        jsonObject.put("fromLongitude", "");
-        jsonObject.put("fromLatitude", "");
-        jsonObject.put("angle", "");
-        jsonObject.put("toLongitude", "");
-        jsonObject.put("toLatitude", "");
-        jsonObject.put("ticksSinceStartOfCalculation", "");
+        jsonObject.put("orderNo", flightPath.orderNo());
+        jsonObject.put("fromLongitude", flightPath.fromLongitude());
+        jsonObject.put("fromLatitude", flightPath.fromLatitude());
+        jsonObject.put("angle", flightPath.angle());
+        jsonObject.put("toLongitude", flightPath.toLongitude());
+        jsonObject.put("toLatitude", flightPath.toLatitude());
+        jsonObject.put("ticksSinceStartOfCalculation", flightPath.ticksSinceStartOfCalculation());
         // set up the file name in appropriate format and write file
-        // TODO: once FlightPath is implemented, fill this in
-        String filename = "flightpath-" + "" + ".json";
+        String filename = "flightpath-" + flightPath.orderDate() + ".json";
         writeJSONFile(filename);
     }
 
