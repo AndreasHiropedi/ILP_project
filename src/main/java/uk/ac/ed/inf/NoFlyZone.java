@@ -47,11 +47,9 @@ public class NoFlyZone
         return noFlyZoneEdges;
     }
 
-    /**
-     * method used to populate the no-fly-zone edges list,
-     * which stores the edges as LngLat objects
-     * @return the newly populated LngLat list
-     */
+    // method used to populate the no-fly-zone edges list,
+    // which stores the edges as LngLat objects
+    // @return the newly populated LngLat list
     private ArrayList<LngLat> generateNoFlyZoneEdges()
     {
         for (ArrayList<Double> edge: noFlyZoneEdgesAsDoubles)

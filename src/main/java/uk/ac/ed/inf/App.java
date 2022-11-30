@@ -14,13 +14,11 @@ import java.time.format.DateTimeFormatter;
  */
 public class App 
 {
-    /**
-     * this method ensures the date inputted in the command line
-     * is a valid date
-     * @param dateToVerify the date to be used to filter out orders
-     * @return a LocalDateTime object of the provided date if valid,
-     * null otherwise
-     */
+
+    // this method ensures the date inputted in the command line
+    //is a valid date
+    // @param dateToVerify the date to be used to filter out orders
+    // @return a String of the provided date if valid
     private static String checkDateValid(String dateToVerify)
     {
         // check to avoid NullPointerException
@@ -51,13 +49,11 @@ public class App
         return dateToVerify;
     }
 
-    /**
-     * this method ensures the URL inputted in the command line
-     * is a valid URL
-     * @param URLToVerify the URL inputted in the command line
-     * @return a URL object of the provided URL if valid,
-     * null otherwise
-     */
+     // this method ensures the URL inputted in the command line
+     // is a valid URL
+     // @param URLToVerify the URL inputted in the command line
+     // @return a URL object of the provided URL if valid,
+     // null otherwise
     private static URL checkURLValid(String URLToVerify)
     {
         // check to avoid NullPointerException

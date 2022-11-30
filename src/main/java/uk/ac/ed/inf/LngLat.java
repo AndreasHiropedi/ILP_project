@@ -28,13 +28,11 @@ public record LngLat(
      */
     private static final double DRONE_MOVE_LENGTH = 0.00015;
 
-    /**
-     * checks if the current location is within a given polygon area
-     * Note: the implementation below is partly based on the following post
-     * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
-     * @param corners a list of the vertices of the polygon
-     * @return true if the current location is inside the polygon or on the edges, false otherwise
-     */
+     // checks if the current location is within a given polygon area
+     // Note: the implementation below is partly based on the following post
+     // <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
+     // @param corners a list of the vertices of the polygon
+     // @return true if the current location is inside the polygon or on the edges, false otherwise
     private boolean inArea(List<LngLat> corners)
     {
         // this part handles exact corners

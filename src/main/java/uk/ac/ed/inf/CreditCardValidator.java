@@ -79,13 +79,11 @@ public class CreditCardValidator
         return (matcherVisa.matches() || matcherMasterCard.matches()) && (luhnSum % 10 == 0);
     }
 
-    /**
-     * given a month and a year (to account for leap years),
-     * return the number of the last day of the given month
-     * @param month the month number as a string
-     * @param year the year number as a string
-     * @return the last day of the given month as a string
-     */
+     // given a month and a year (to account for leap years),
+     // return the number of the last day of the given month
+     // @param month the month number as a string
+     // @param year the year number as a string
+     // @return the last day of the given month as a string
     private String findLastDayOfMonth(String month, String year)
     {
         // check if the month is february and the year is a leap year
@@ -108,13 +106,11 @@ public class CreditCardValidator
         return "31";
     }
 
-    /**
-     * convert a credit card expiry date (format mm/yy) into
-     * a date in the format yyyy/mm/dd
-     * (using the last day of the month for the dd part)
-     * @return the newly formatted credit card expiry date
-     * (as a string yyyy/mm/dd)
-     */
+     // convert a credit card expiry date (format mm/yy) into
+     // a date in the format yyyy/mm/dd
+     // (using the last day of the month for the dd part)
+     // @return the newly formatted credit card expiry date
+     // (as a string yyyy/mm/dd)
     private String convertExpiryDate()
     {
         String creditCardExpiry = orderToVerify.getCreditCardExpiry();

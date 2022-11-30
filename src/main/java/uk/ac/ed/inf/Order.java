@@ -89,6 +89,15 @@ public class Order
     // =========================================================================
 
     /**
+     * getter method for the order number field
+     * @return order number (as a string)
+     */
+    public String getOrderNumber()
+    {
+        return orderNo;
+    }
+
+    /**
      * getter method for the order date field
      * @return order date (as a string)
      */
@@ -150,14 +159,13 @@ public class Order
     // =========================== ORDER VALIDATION ============================
     // =========================================================================
 
-    /**
-     * check if the order is valid, and update the order outcome accordingly
-     * @return true if an order is valid, false otherwise
-     */
+    //
+    // check if the order is valid, and update the order outcome accordingly
+    // @return true if an order is valid, false otherwise
     private boolean isOrderValid()
     {
         // check if there are missing details, and if so, mark the order as invalid
-        if (orderNo == null || orderDate == null || customer == null)
+        if (orderNo == null || customer == null)
         {
             outcome = OrderOutcome.Invalid;
             return false;
@@ -190,13 +198,12 @@ public class Order
     // ========================== OTHER CLASS METHODS ==========================
     // =========================================================================
 
-    /**
-     * check that all the pizzas being ordered are available on the PizzaDronz app
-     * @param allAvailablePizzas a list of the names all pizzas available on the
-     *                           PizzaDronz app
-     * @return true if all ordered items are pizzas available on the app,
-     * false otherwise
-     */
+
+     // check that all the pizzas being ordered are available on the PizzaDronz app
+     // @param allAvailablePizzas a list of the names all pizzas available on the
+     //                           PizzaDronz app
+     // @return true if all ordered items are pizzas available on the app,
+     // false otherwise
     private boolean allOrderedPizzasExists(ArrayList<String> allAvailablePizzas)
     {
         // flag to keep track in case we find a pizza that doesn't exist
@@ -295,7 +302,8 @@ public class Order
      */
     public void writeOrderToJson()
     {
-        //TODO: implement this method
+        JsonFileWriter fileWriter = new JsonFileWriter();
+        fileWriter.writeOrderToJSON(this);
     }
 
 }
