@@ -63,7 +63,7 @@ public class JsonFileWriter
     // @param filename the name of the file to be written
     private void writeJSONFile(String filename)
     {
-        // the directory path to the resultsfile folder
+        // the directory path to the resultsfiles folder
         String path = "";
         try
         {
