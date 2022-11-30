@@ -46,6 +46,7 @@ public class JsonFileWriter
     public void writeFlightPathToJSON(FlightPath flightPath)
     {
         // add all the necessary information to the JSON object
+        // TODO: once FlightPath is implemented, fill in the rest of these
         jsonObject.put("orderNo", "");
         jsonObject.put("fromLongitude", "");
         jsonObject.put("fromLatitude", "");
@@ -54,6 +55,7 @@ public class JsonFileWriter
         jsonObject.put("toLatitude", "");
         jsonObject.put("ticksSinceStartOfCalculation", "");
         // set up the file name in appropriate format and write file
+        // TODO: once FlightPath is implemented, fill this in
         String filename = "flightpath-" + "" + ".json";
         writeJSONFile(filename);
     }
@@ -63,12 +65,12 @@ public class JsonFileWriter
     // @param filename the name of the file to be written
     private void writeJSONFile(String filename)
     {
-        // the directory path to the resultsfiles folder
-        String path = "";
+        // the directory path to the resultfiles folder
+        String path = System.getProperty("user.dir") + "/resultfiles";
         try
         {
             // write the JSON object (and all data it stores) to given file
-            FileWriter file = new FileWriter(path + filename);
+            FileWriter file = new FileWriter(path + "/" + filename);
             file.write(jsonObject.toString());
             file.close();
         }
