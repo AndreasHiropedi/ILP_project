@@ -27,7 +27,7 @@ public class Order
     private OrderOutcome outcome;
 
     // a list of all restaurants on the PizzaDronz app
-    private static Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer();
+    private static Restaurant[] restaurants;
 
     // a list containing all orders that are deemed valid
     public static ArrayList<Order> validOrders;
@@ -153,6 +153,17 @@ public class Order
     public void setOutcome(OrderOutcome outcome)
     {
         this.outcome = outcome;
+    }
+
+    /**
+     * setter method for the static restaurants list
+     * based on URL inputted in the command line
+     * @param restaurants the list of restaurants available
+     *                    on the PizzaDronz app
+     */
+    public static void setRestaurants(Restaurant[] restaurants)
+    {
+        Order.restaurants = restaurants;
     }
 
     // =========================================================================

@@ -96,6 +96,10 @@ public class App
         // perform the validation checks for the command line inputs
         String validatedDate = checkDateValid(inputtedDate);
         URL validatedURL = checkURLValid(inputtedURL);
+        // set the available restaurants field to all the restaurants from the validated URL
+        Order.setRestaurants(Restaurant.getRestaurantsFromRestServer(validatedURL));
+        // TODO: link the validated date to the orders class
+
         // TODO: implement the rest of this method
     }
 
