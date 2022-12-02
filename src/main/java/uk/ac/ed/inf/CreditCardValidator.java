@@ -31,10 +31,12 @@ public class CreditCardValidator
      * @return true if the credit card number is valid,
      * false otherwise
      */
-    public boolean validCreditCardNumber() {
+    public boolean validCreditCardNumber()
+    {
         String creditCardNumber = orderToVerify.getCreditCardNumber();
         // check if string is empty
-        if (creditCardNumber == null) {
+        if (creditCardNumber == null)
+        {
             return false;
         }
         // card validation regexes that stores information about valid card numbers
@@ -51,15 +53,19 @@ public class CreditCardValidator
         int luhnSum = 0;
         boolean shouldBeDoubled = false;
         // starting from last digit and going to the first
-        for (int i = creditCardNumber.length() - 1; i >= 0; i--) {
+        for (int i = creditCardNumber.length() - 1; i >= 0; i--)
+        {
             // get each individual digit from the card number
-            try {
+            try
+            {
                 int currentDigit = Integer.parseInt(creditCardNumber.substring(i, i + 1));
                 // check if it should be doubled, and if so, double it
-                if (shouldBeDoubled) {
+                if (shouldBeDoubled)
+                {
                     currentDigit *= 2;
                     // check the new result is a single digit number
-                    if (currentDigit > 9) {
+                    if (currentDigit > 9)
+                    {
                         // if not, convert it to a single digit number
                         currentDigit = (currentDigit % 10) + 1;
                     }
@@ -68,25 +74,11 @@ public class CreditCardValidator
                 luhnSum += currentDigit;
                 // and switch the value of the flag
                 shouldBeDoubled = !shouldBeDoubled;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.out.println(creditCardNumber.substring(i, i + 1));
             }
-//            // check if it should be doubled, and if so, double it
-//            if (shouldBeDoubled)
-//            {
-//                currentDigit *= 2;
-//                // check the new result is a single digit number
-//                if (currentDigit > 9)
-//                {
-//                    // if not, convert it to a single digit number
-//                    currentDigit = (currentDigit % 10) + 1;
-//                }
-//            }
-//            // append the computed current digit to the sum of digits
-//            luhnSum += currentDigit;
-//            // and switch the value of the flag
-//            shouldBeDoubled = !shouldBeDoubled;
-//        }
             // if there is a match in terms of card pattern
             // and the Luhn checksum algorithm passes
             // then the credit card number is valid
@@ -95,11 +87,11 @@ public class CreditCardValidator
         return false;
     }
 
-     // given a month and a year (to account for leap years),
-     // return the number of the last day of the given month
-     // @param month the month number as a string
-     // @param year the year number as a string
-     // @return the last day of the given month as a string
+    // given a month and a year (to account for leap years),
+    // return the number of the last day of the given month
+    // @param month the month number as a string
+    // @param year the year number as a string
+    // @return the last day of the given month as a string
     private String findLastDayOfMonth(String month, String year)
     {
         // check if the month is february and the year is a leap year
@@ -122,11 +114,11 @@ public class CreditCardValidator
         return "31";
     }
 
-     // convert a credit card expiry date (format mm/yy) into
-     // a date in the format yyyy/mm/dd
-     // (using the last day of the month for the dd part)
-     // @return the newly formatted credit card expiry date
-     // (as a string yyyy/mm/dd)
+    // convert a credit card expiry date (format mm/yy) into
+    // a date in the format yyyy/mm/dd
+    // (using the last day of the month for the dd part)
+    // @return the newly formatted credit card expiry date
+    // (as a string yyyy/mm/dd)
     private String convertExpiryDate()
     {
         String creditCardExpiry = orderToVerify.getCreditCardExpiry();
