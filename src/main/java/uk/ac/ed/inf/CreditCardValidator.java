@@ -1,6 +1,6 @@
 package uk.ac.ed.inf;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,12 +31,10 @@ public class CreditCardValidator
      * @return true if the credit card number is valid,
      * false otherwise
      */
-    public boolean validCreditCardNumber()
-    {
+    public boolean validCreditCardNumber() {
         String creditCardNumber = orderToVerify.getCreditCardNumber();
         // check if string is empty
-        if (creditCardNumber == null)
-        {
+        if (creditCardNumber == null) {
             return false;
         }
         // card validation regexes that stores information about valid card numbers
@@ -53,30 +51,48 @@ public class CreditCardValidator
         int luhnSum = 0;
         boolean shouldBeDoubled = false;
         // starting from last digit and going to the first
-        for (int i = creditCardNumber.length() - 1; i >= 0; i--)
-        {
+        for (int i = creditCardNumber.length() - 1; i >= 0; i--) {
             // get each individual digit from the card number
-            int currentDigit = Integer.parseInt(creditCardNumber.substring(i, i + 1));
-            // check if it should be doubled, and if so, double it
-            if (shouldBeDoubled)
-            {
-                currentDigit *= 2;
-                // check the new result is a single digit number
-                if (currentDigit > 9)
-                {
-                    // if not, convert it to a single digit number
-                    currentDigit = (currentDigit % 10) + 1;
+            try {
+                int currentDigit = Integer.parseInt(creditCardNumber.substring(i, i + 1));
+                // check if it should be doubled, and if so, double it
+                if (shouldBeDoubled) {
+                    currentDigit *= 2;
+                    // check the new result is a single digit number
+                    if (currentDigit > 9) {
+                        // if not, convert it to a single digit number
+                        currentDigit = (currentDigit % 10) + 1;
+                    }
                 }
+                // append the computed current digit to the sum of digits
+                luhnSum += currentDigit;
+                // and switch the value of the flag
+                shouldBeDoubled = !shouldBeDoubled;
+            } catch (Exception e) {
+                System.out.println(creditCardNumber.substring(i, i + 1));
             }
-            // append the computed current digit to the sum of digits
-            luhnSum += currentDigit;
-            // and switch the value of the flag
-            shouldBeDoubled = !shouldBeDoubled;
+//            // check if it should be doubled, and if so, double it
+//            if (shouldBeDoubled)
+//            {
+//                currentDigit *= 2;
+//                // check the new result is a single digit number
+//                if (currentDigit > 9)
+//                {
+//                    // if not, convert it to a single digit number
+//                    currentDigit = (currentDigit % 10) + 1;
+//                }
+//            }
+//            // append the computed current digit to the sum of digits
+//            luhnSum += currentDigit;
+//            // and switch the value of the flag
+//            shouldBeDoubled = !shouldBeDoubled;
+//        }
+            // if there is a match in terms of card pattern
+            // and the Luhn checksum algorithm passes
+            // then the credit card number is valid
+            return (matcherVisa.matches() || matcherMasterCard.matches()) && (luhnSum % 10 == 0);
         }
-        // if there is a match in terms of card pattern
-        // and the Luhn checksum algorithm passes
-        // then the credit card number is valid
-        return (matcherVisa.matches() || matcherMasterCard.matches()) && (luhnSum % 10 == 0);
+        return false;
     }
 
      // given a month and a year (to account for leap years),
@@ -117,7 +133,7 @@ public class CreditCardValidator
         //
         String new_date = "";
         // regex to check that the expiry date is in the format mm/yy
-        String regex = "^((0[1-9])|(1[0-2]))/*((0[0-9])|(1[0-9]))$";
+        String regex = "^((0[1-9])|(1[0-2]))/*((0[0-9])|([1-3][0-9]))$";
         // create a pattern matcher for the regex
         Pattern p = Pattern.compile(regex);
         Matcher matcher = p.matcher(creditCardExpiry);
@@ -150,7 +166,7 @@ public class CreditCardValidator
         }
         // convert the order date to a date object
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime orderDateObject = LocalDateTime.parse(orderDate, formatter);
+        LocalDate orderDateObject = LocalDate.parse(orderDate, formatter);
         // convert the credit card expiry date into yyyy-mm-dd format
         String convertedDate = convertExpiryDate();
         // check if the returned string is empty
@@ -159,9 +175,15 @@ public class CreditCardValidator
             return false;
         }
         // if it's not, parse it as a date
-        LocalDateTime expiryDateFormat = LocalDateTime.parse(convertedDate, formatter);
-        // and check if the expiry date is not before the order date (making the expiry date valid)
-        return !expiryDateFormat.isBefore(orderDateObject);
+        try {
+            LocalDate expiryDateFormat = LocalDate.parse(convertedDate, formatter);
+            // and check if the expiry date is not before the order date (making the expiry date valid)
+            return !expiryDateFormat.isBefore(orderDateObject);
+        }
+        catch (Exception e){
+            System.out.println(convertedDate);
+        }
+        return false;
     }
 
     /**

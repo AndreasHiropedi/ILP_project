@@ -2,7 +2,7 @@ package uk.ac.ed.inf;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -31,17 +31,17 @@ public class App
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try
         {
-            LocalDateTime.parse(dateToVerify, formatter);
+            LocalDate.parse(dateToVerify,formatter);
         }
         catch (Exception e)
         {
             System.err.println("The date provided is in the wrong format!");
             System.exit(1);
         }
-        LocalDateTime givenDate = LocalDateTime.parse(dateToVerify, formatter);
+        LocalDate givenDate = LocalDate.parse(dateToVerify, formatter);
         // check provided date is in the appropriate range
-        if ( givenDate.isBefore(LocalDateTime.parse("2023-01-01", formatter))
-                || givenDate.isAfter(LocalDateTime.parse("2023-05-31", formatter)) )
+        if ( givenDate.isBefore(LocalDate.parse("2023-01-01", formatter))
+                || givenDate.isAfter(LocalDate.parse("2023-05-31", formatter)) )
         {
             System.err.println("The date provided is out of range!");
             System.exit(1);
@@ -97,7 +97,8 @@ public class App
         String validatedDate = checkDateValid(inputtedDate);
         URL validatedURL = checkURLValid(inputtedURL);
         // set the available restaurants field to all the restaurants from the validated URL
-        Order.setRestaurants(Restaurant.getRestaurantsFromRestServer(validatedURL));
+        Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer(validatedURL);
+        Order.setRestaurants(restaurants);
         // TODO: link the validated date to the orders class
 
         // TODO: implement the rest of this method

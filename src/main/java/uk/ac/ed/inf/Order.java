@@ -30,7 +30,7 @@ public class Order
     private static Restaurant[] restaurants;
 
     // a list containing all orders that are deemed valid
-    public static ArrayList<Order> validOrders;
+    public static ArrayList<Order> validOrders = new ArrayList<>();
 
     // =========================================================================
     // ============================= CONSTRUCTOR ===============================
