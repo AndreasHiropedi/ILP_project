@@ -8,14 +8,14 @@ public class Drone
 {
     // this field stores the remaining number of moves
     // that the drone has before it runs out of battery
-    private int numberOfMoves;
+    private int numberOfMoves = 2000;
 
     /**
      * constructor method for the drone object
      */
     public Drone()
     {
-        int numberOfMoves = 2000;
+
     }
 
 
