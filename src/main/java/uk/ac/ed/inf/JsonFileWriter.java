@@ -32,7 +32,7 @@ public class JsonFileWriter
         // add all the necessary information to the JSON object
         jsonObject.put("orderNo", order.getOrderNumber());
         jsonObject.put("outcome", order.getOutcome().name());
-        jsonObject.put("costInPence", order.getDeliveryCost());
+        jsonObject.put("costInPence", order.getOrderDeliveryCost());
         // set up the file name in appropriate format and write file
         String filename = "deliveries-" + order.getOrderDate() + ".json";
         writeJSONFile(filename);
