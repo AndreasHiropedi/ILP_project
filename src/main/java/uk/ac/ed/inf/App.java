@@ -1,9 +1,13 @@
 package uk.ac.ed.inf;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * this is the main project class, where everything comes together
@@ -99,9 +103,11 @@ public class App
         // set the available restaurants field to all the restaurants from the validated URL
         Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer(validatedURL);
         Order.setRestaurants(restaurants);
-        // TODO: link the validated date to the orders class
-
+        // retrieve all available orders for the validated date
+        String extension = "/orders" + "/" + validatedDate;
+        List<Order> allOrders = RetrieveData.getData(validatedURL, extension, new TypeReference<>(){});
+        // and get all the valid orders
+        List<Order> allValidOrders = Order.getValidOrders();
         // TODO: implement the rest of this method
     }
-
 }

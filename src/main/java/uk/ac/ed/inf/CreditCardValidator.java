@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,8 +35,8 @@ public class CreditCardValidator
     public boolean validCreditCardNumber()
     {
         String creditCardNumber = orderToVerify.getCreditCardNumber();
-        // check if string is empty
-        if (creditCardNumber == null)
+        // check if string is empty, or if it has an incorrect length
+        if (creditCardNumber == null || creditCardNumber.length() != 16)
         {
             return false;
         }
@@ -75,71 +76,12 @@ public class CreditCardValidator
                 // and switch the value of the flag
                 shouldBeDoubled = !shouldBeDoubled;
             }
-            catch (Exception e)
-            {
-                System.out.println(creditCardNumber.substring(i, i + 1));
-            }
-            // if there is a match in terms of card pattern
-            // and the Luhn checksum algorithm passes
-            // then the credit card number is valid
-            return (matcherVisa.matches() || matcherMasterCard.matches()) && (luhnSum % 10 == 0);
+            catch (Exception ignored) {}
         }
-        return false;
-    }
-
-    // given a month and a year (to account for leap years),
-    // return the number of the last day of the given month
-    // @param month the month number as a string
-    // @param year the year number as a string
-    // @return the last day of the given month as a string
-    private String findLastDayOfMonth(String month, String year)
-    {
-        // check if the month is february and the year is a leap year
-        if (month.equals("02") && Integer.parseInt(year) % 4 == 0)
-        {
-            return "29";
-        }
-        // check if the month is february (non-leap year)
-        else if (month.equals("02"))
-        {
-            return "28";
-        }
-        // check if the month has 30 days (april, june, september, november)
-        else if (month.equals("04") || month.equals("06") ||
-                month.equals("09") || month.equals("11"))
-        {
-            return "30";
-        }
-        // if none of the other cases apply, the month must have 31 days
-        return "31";
-    }
-
-    // convert a credit card expiry date (format mm/yy) into
-    // a date in the format yyyy/mm/dd
-    // (using the last day of the month for the dd part)
-    // @return the newly formatted credit card expiry date
-    // (as a string yyyy/mm/dd)
-    private String convertExpiryDate()
-    {
-        String creditCardExpiry = orderToVerify.getCreditCardExpiry();
-        //
-        String new_date = "";
-        // regex to check that the expiry date is in the format mm/yy
-        String regex = "^((0[1-9])|(1[0-2]))/*((0[0-9])|([1-3][0-9]))$";
-        // create a pattern matcher for the regex
-        Pattern p = Pattern.compile(regex);
-        Matcher matcher = p.matcher(creditCardExpiry);
-        // check if the credit card expiry date matches the regex
-        if (matcher.matches())
-        {
-            // if it does, break it down into year, month and day
-            String year = "20" + creditCardExpiry.substring(3);
-            String month = creditCardExpiry.substring(0, 2);
-            String day = findLastDayOfMonth(month, year);
-            // and assemble the newly formatted date string
-            new_date = year + "-" + month + "-" + day;
-        }
-        return new_date;
+        // if there is a match in terms of card pattern
+        // and the Luhn checksum algorithm passes
+        // then the credit card number is valid
+        return (matcherVisa.matches() || matcherMasterCard.matches()) && (luhnSum % 10 == 0);
     }
 
     /**
@@ -156,26 +98,22 @@ public class CreditCardValidator
         {
             return false;
         }
-        // convert the order date to a date object
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate orderDateObject = LocalDate.parse(orderDate, formatter);
-        // convert the credit card expiry date into yyyy-mm-dd format
-        String convertedDate = convertExpiryDate();
-        // check if the returned string is empty
-        if (convertedDate == null)
+        LocalDate dateOfOrder = LocalDate.parse(orderDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate lastDay;
+        if (creditCardExpiry.matches("^((0[1-9])|(1[0-2]))/*((0[0-9])|([1-3][0-9]))$"))
+        {
+            YearMonth yearMonth = YearMonth.parse(creditCardExpiry, DateTimeFormatter.ofPattern("MM/yy"));
+            lastDay = yearMonth.atEndOfMonth();
+        }
+        else
         {
             return false;
         }
-        // if it's not, parse it as a date
-        try {
-            LocalDate expiryDateFormat = LocalDate.parse(convertedDate, formatter);
-            // and check if the expiry date is not before the order date (making the expiry date valid)
-            return !expiryDateFormat.isBefore(orderDateObject);
-        }
-        catch (Exception e){
-            System.out.println(convertedDate);
-        }
-        return false;
+        String lastDayString = lastDay.toString();
+        String reformattedLastDay = lastDayString.substring(0, 4) + "-" +
+                lastDayString.substring(5, 7) + "-" + lastDayString.substring(8, 10);
+        lastDay = LocalDate.parse(reformattedLastDay, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return !dateOfOrder.isAfter(lastDay);
     }
 
     /**

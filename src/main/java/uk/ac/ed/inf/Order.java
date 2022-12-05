@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
  * this class is used to store all the information about orders
  * from the REST server, plus information about the outcome of each order
@@ -30,7 +29,10 @@ public class Order
     private static Restaurant[] restaurants;
 
     // a list containing all orders that are deemed valid
-    public static ArrayList<Order> validOrders = new ArrayList<>();
+    private static ArrayList<Order> validOrders = new ArrayList<>();
+
+    //
+    private int orderDeliveryCost;
 
     // =========================================================================
     // ============================= CONSTRUCTOR ===============================
@@ -107,6 +109,15 @@ public class Order
     }
 
     /**
+     *
+     * @return
+     */
+    public int getOrderDeliveryCost()
+    {
+        return orderDeliveryCost;
+    }
+
+    /**
      * getter method for the credit card number field
      * @return credit card number (as a string)
      */
@@ -140,6 +151,16 @@ public class Order
     public OrderOutcome getOutcome()
     {
         return outcome;
+    }
+
+    /**
+     * getter method for the list of valid orders for
+     * the inputted date (from the command line)
+     * @return a list of all valid orders for a given date
+     */
+    public static ArrayList<Order> getValidOrders()
+    {
+        return validOrders;
     }
 
     // =========================================================================
@@ -187,17 +208,19 @@ public class Order
         {
             return false;
         }
-        // if there are no order items, or there are more than 4 items ordered
+        // if there are no or less than 1 order items,
+        // or there are more than 4 items ordered
         // mark the order as invalid
-        if (orderItems == null || orderItems.size() > 4)
+        if (orderItems == null || orderItems.size() > 4 || orderItems.size() < 1)
         {
             outcome = OrderOutcome.InvalidPizzaCount;
             return false;
         }
-        // check if the delivery cost matches the total stored on the REST server
-        if (getDeliveryCost() != priceTotalInPence && outcome == null)
+        // update the delivery cost, and check if the order outcome has changed
+        updateDeliveryCost();
+        if (outcome != null)
         {
-            outcome = OrderOutcome.InvalidTotal;
+            // if the order outcome has changed, the order is invalid
             return false;
         }
         // if all checks pass, then the order is valid
@@ -209,101 +232,78 @@ public class Order
     // ========================== OTHER CLASS METHODS ==========================
     // =========================================================================
 
-
-     // check that all the pizzas being ordered are available on the PizzaDronz app
-     // @param allAvailablePizzas a list of the names all pizzas available on the
-     //                           PizzaDronz app
-     // @return true if all ordered items are pizzas available on the app,
-     // false otherwise
-    private boolean allOrderedPizzasExists(ArrayList<String> allAvailablePizzas)
-    {
-        // flag to keep track in case we find a pizza that doesn't exist
-        boolean allPizzasExist = true;
-        // check all order items
-        for (String item: orderItems)
-        {
-            // used to keep track of whether we find a match for each item ordered
-            int count = 0;
-            // check all existing pizzas in the app
-            for (String pizza: allAvailablePizzas)
-            {
-                // if a match is found, break the loop
-                if (item.equals(pizza))
-                {
-                    break;
-                }
-                // otherwise update the counter variable
-                count += 1;
-            }
-            // if we have been through the whole list and no match was found
-            if (count == allAvailablePizzas.size())
-            {
-                // update the flag to indicate an undefined pizza was found, and break the loop
-                allPizzasExist = false;
-                break;
-            }
-        }
-        return allPizzasExist;
-    }
-
     /**
      * computes the cost, in pence, of all order items
-     * plus a charge of £1 (100 pence) per delivery
-     * @return the total cost (in pence) of all these items,
-     * including delivery charges
+     * plus a charge of £1 (100 pence) per delivery, and updates the
+     * appropriate field
+     *
+     * also updates the order outcome accordingly
+     * (if an invalid pizza is found, if the pizzas cannot be provided
+     * by a single supplier, or if the total is invalid)
      */
-    public int getDeliveryCost(){
+    public void updateDeliveryCost()
+    {
+        // this variable is used to keep track of the price
+        // of all order items
         int totalInPence = 0;
-        // a list to keep track of all available pizzas on the PizzaDronz app
-        ArrayList<String> allAvailablePizzas = new ArrayList<>();
-        // fill up the all available pizzas list
-        for (Restaurant restaurant: restaurants)
-        {
-            // save the names of those Menu objects as a list of strings
-            ArrayList<String> restaurantMenu = new ArrayList<>(Arrays.stream(restaurant.getMenu()).map(Menu::name).toList());
-            // and add all the restaurant's menu items to the list of all available pizzas on the app
-            allAvailablePizzas.addAll(restaurantMenu);
-        }
+        // keep track of all items in the order items list
+        // that are defined
+        int definedItems = 0;
+        // keep track of all the items on the menu that match
+        // the order items
+        int itemsInMenu = 0;
+        // this variable will be used to store the final delivery cost
+        int deliveryCost = 0;
         // check to see if a single restaurant can deliver all the ordered items
         for (Restaurant participant : restaurants)
         {
             // get all menu items as Menu objects
             List<Menu> menuItems = Arrays.stream(participant.getMenu()).toList();
-            // save the names of those Menu objects as a list of strings
-            ArrayList<String> restaurantMenu = new ArrayList<>(Arrays.stream(participant.getMenu()).map(Menu::name).toList());
-            // if a restaurant's menu has all the order items
-            if (restaurantMenu.containsAll(orderItems))
+            for (Menu item: menuItems)
             {
-                // reset the order outcome field
-                outcome = null;
-                // add the price for each individual item to the total
-                for (Menu item: menuItems)
+                for (String orderItem: orderItems)
                 {
-                    for (String orderItem: orderItems)
+                    // for each menu item, check if there is a match
+                    if (orderItem.equals(item.name()))
                     {
-                        if (item.name().equals(orderItem))
-                        {
-                            totalInPence += item.priceInPence();
-                        }
+                        // and update the defined items, items in menu
+                        // and total price in pence
+                        definedItems += 1;
+                        itemsInMenu += 1;
+                        totalInPence += item.priceInPence();
                     }
                 }
-                // and break the loop, since all items have now been accounted for
-                break;
+                // if all order items are contained in the menu
+                if (itemsInMenu == orderItems.size())
+                {
+                    // add the £1 delivery fee
+                    deliveryCost = totalInPence + 100;
+                    // and check if the total is valid
+                    if (deliveryCost != priceTotalInPence)
+                    {
+                        outcome = OrderOutcome.InvalidTotal;
+                    }
+                }
             }
-            // set the order outcome field to mark an invalid pizza combination
-            else
-            {
-                outcome = OrderOutcome.InvalidPizzaCombinationMultipleSuppliers;
-            }
+            // if the menu doesn't contain all order items
+            // reset the two fields
+            itemsInMenu = 0;
+            totalInPence = 0;
         }
-        // check that all pizza items ordered actually exist on the PizzaDronz app
-        // and update the order outcome accordingly
-        if (!allOrderedPizzasExists(allAvailablePizzas))
+        // if all items are defined, then set the outcome to invalid
+        // due to multiple suppliers being needed
+        if (definedItems == orderItems.size() && deliveryCost == 0)
+        {
+            outcome = OrderOutcome.InvalidPizzaCombinationMultipleSuppliers;
+        }
+        // if not all items are defined, then set the outcome to invalid
+        // due to an invalid pizza being found
+        else if (definedItems != orderItems.size() && deliveryCost == 0)
         {
             outcome = OrderOutcome.InvalidPizzaNotDefined;
         }
-        // include the £1 delivery fee
-        return totalInPence + 100;
+        // set the order delivery cost field
+        orderDeliveryCost = deliveryCost;
     }
 
     /**
