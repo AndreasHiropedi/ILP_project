@@ -27,13 +27,15 @@ public class Drone
     // (where the drone will be after a move is made)
     private LngLat nextPosition;
 
-    //
+    // a list of all the moves the drone makes
+    // (all points covered during the flight)
     private List<LngLat> allMoves = new ArrayList<>();
 
     // all valid orders for the given date (from command line)
     private List<Order> ordersForGivenDate = Order.getValidOrders();
 
-    //
+    // field used to store the date inputted from the command line
+    // (to be used for GeoJSON file writing)
     private String dateOfFlightPlan;
 
     // =========================================================================
@@ -54,8 +56,9 @@ public class Drone
     // =========================================================================
 
     /**
-     *
-     * @return
+     * getter method for the list of all the moves the drone makes
+     * @return a list of LngLat objects representing all the points
+     * covered during the flight of the drone
      */
     public List<LngLat> getAllMoves()
     {
@@ -63,8 +66,9 @@ public class Drone
     }
 
     /**
-     *
-     * @return
+     * getter method for the date of flight path field
+     * @return the date of the flight path (to be used
+     * in the GeoJSON file writing)
      */
     public String getDateOfFlightPlan()
     {
@@ -76,8 +80,8 @@ public class Drone
     // =========================================================================
 
     /**
-     *
-     * @param dateOfFlightPlan
+     * setter method for the date of flight path field
+     * @param dateOfFlightPlan the date inputted in the command line
      */
     public void setDateOfFlightPlan(String dateOfFlightPlan)
     {
