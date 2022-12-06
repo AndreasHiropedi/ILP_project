@@ -31,7 +31,9 @@ public class Order
     // a list containing all orders that are deemed valid
     private static ArrayList<Order> validOrders = new ArrayList<>();
 
-    //
+    // this field is used to store the delivery cost of an order
+    // (including the £1 delivery fee)
+    // set to 0 if the order is invalid
     private int orderDeliveryCost;
 
     // =========================================================================
