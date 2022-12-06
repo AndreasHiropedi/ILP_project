@@ -272,7 +272,7 @@ public class Order
         for (Restaurant restaurant : restaurants)
         {
             // get all menu items as Menu objects
-            List<Menu> menuItems = Arrays.stream(restaurant.getMenu()).toList();
+            List<Menu> menuItems = restaurant.getMenuItems();
             for (Menu item: menuItems)
             {
                 for (String orderItem: orderItems)
