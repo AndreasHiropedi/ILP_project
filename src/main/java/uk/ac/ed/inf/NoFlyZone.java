@@ -14,22 +14,23 @@ import java.util.ArrayList;
 public class NoFlyZone
 {
     // all the information from the REST server
-    @JsonProperty("coordinates")
-    private ArrayList<ArrayList<Double>> noFlyZoneEdgesAsDoubles;
+    private ArrayList<ArrayList<Double>> noFlyZoneEdgesAsDoubles = new ArrayList<>();
 
     // a list that stores the edges of each no-fly-zone
     // as LngLat objects
-    private ArrayList<LngLat> noFlyZoneEdges;
+    private ArrayList<LngLat> noFlyZoneEdges = new ArrayList<>();
 
     // a list of all the no-fly-zones from the REST server
-    public static ArrayList<NoFlyZone> allNoFlyZones;
+    public static ArrayList<NoFlyZone> allNoFlyZones = new ArrayList<>();
 
     /**
      * constructor for the no-fly-zone values
      * @param noFlyZoneEdgesAsDoubles the list of edges for a no-fly-zone object
      *                       from the REST server
      */
-    public NoFlyZone(ArrayList<ArrayList<Double>> noFlyZoneEdgesAsDoubles)
+    public NoFlyZone(
+            @JsonProperty("coordinates")
+            ArrayList<ArrayList<Double>> noFlyZoneEdgesAsDoubles)
     {
         this.noFlyZoneEdgesAsDoubles = noFlyZoneEdgesAsDoubles;
         this.noFlyZoneEdges = generateNoFlyZoneEdges();

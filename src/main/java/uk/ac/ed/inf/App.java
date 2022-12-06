@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -108,6 +107,10 @@ public class App
         List<Order> allOrders = RetrieveData.getData(validatedURL, extension, new TypeReference<>(){});
         // and get all the valid orders
         List<Order> allValidOrders = Order.getValidOrders();
+        // create the drone, and set the date to be the validated date
+        Drone drone = new Drone();
+        drone.setDateOfFlightPlan(validatedDate);
         // TODO: implement the rest of this method
+
     }
 }

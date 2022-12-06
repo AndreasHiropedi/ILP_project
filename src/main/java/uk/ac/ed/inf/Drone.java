@@ -1,5 +1,6 @@
 package uk.ac.ed.inf;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,8 +27,18 @@ public class Drone
     // (where the drone will be after a move is made)
     private LngLat nextPosition;
 
+    //
+    private List<LngLat> allMoves = new ArrayList<>();
+
     // all valid orders for the given date (from command line)
     private List<Order> ordersForGivenDate = Order.getValidOrders();
+
+    //
+    private String dateOfFlightPlan;
+
+    // =========================================================================
+    // ============================= CONSTRUCTOR ===============================
+    // =========================================================================
 
     /**
      * constructor method for the drone object
@@ -38,6 +49,57 @@ public class Drone
         this.currentPosition = APPLETON_TOWER;
     }
 
+    // =========================================================================
+    // ================================ GETTERS ================================
+    // =========================================================================
 
+    /**
+     *
+     * @return
+     */
+    public List<LngLat> getAllMoves()
+    {
+        return allMoves;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getDateOfFlightPlan()
+    {
+        return dateOfFlightPlan;
+    }
+
+    // =========================================================================
+    // ================================ SETTERS ================================
+    // =========================================================================
+
+    /**
+     *
+     * @param dateOfFlightPlan
+     */
+    public void setDateOfFlightPlan(String dateOfFlightPlan)
+    {
+        this.dateOfFlightPlan = dateOfFlightPlan;
+    }
+
+    // =========================================================================
+    // ========================== OTHER CLASS METHODS ==========================
+    // =========================================================================
+
+
+
+
+    /**
+     * this method is used to write the flight plan for delivering
+     * orders for a specific date (inputted in the command line)
+     * to a GeoJSON file
+     */
+    public void writePlanToGeoJSON()
+    {
+        GeoJSONWriter geoJSONWriter = new GeoJSONWriter();
+        geoJSONWriter.writePlanToGeoJSON(this);
+    }
 
 }
