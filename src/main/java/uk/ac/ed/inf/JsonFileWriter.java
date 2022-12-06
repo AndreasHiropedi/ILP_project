@@ -49,7 +49,14 @@ public class JsonFileWriter
         jsonObject.put("orderNo", flightPath.orderNo());
         jsonObject.put("fromLongitude", flightPath.fromLongitude());
         jsonObject.put("fromLatitude", flightPath.fromLatitude());
-        jsonObject.put("angle", flightPath.angle());
+        if (flightPath.angle() == null)
+        {
+            jsonObject.put("angle", "null");
+        }
+        else
+        {
+            jsonObject.put("angle", flightPath.angle());
+        }
         jsonObject.put("toLongitude", flightPath.toLongitude());
         jsonObject.put("toLatitude", flightPath.toLatitude());
         jsonObject.put("ticksSinceStartOfCalculation", flightPath.ticksSinceStartOfCalculation());
