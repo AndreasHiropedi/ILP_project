@@ -36,6 +36,9 @@ public class Order
     // set to 0 if the order is invalid
     private int orderDeliveryCost;
 
+    // store the corresponding restaurant for the given order
+    private Restaurant correspondingRestaurant;
+
     // =========================================================================
     // ============================= CONSTRUCTOR ===============================
     // =========================================================================
@@ -112,7 +115,7 @@ public class Order
 
     /**
      * getter method for the order delivery cost field
-     * @return the delivery cost of the order 
+     * @return the delivery cost of the order
      * (including the £1 delivery fee if the order is valid)
      */
     public int getOrderDeliveryCost()
@@ -154,6 +157,15 @@ public class Order
     public OrderOutcome getOutcome()
     {
         return outcome;
+    }
+
+    /**
+     * getter method for the order's corresponding restaurant
+     * @return restaurant to which the order was made
+     */
+    public Restaurant getCorrespondingRestaurant()
+    {
+        return correspondingRestaurant;
     }
 
     /**
@@ -257,10 +269,10 @@ public class Order
         // this variable will be used to store the final delivery cost
         int deliveryCost = 0;
         // check to see if a single restaurant can deliver all the ordered items
-        for (Restaurant participant : restaurants)
+        for (Restaurant restaurant : restaurants)
         {
             // get all menu items as Menu objects
-            List<Menu> menuItems = Arrays.stream(participant.getMenu()).toList();
+            List<Menu> menuItems = Arrays.stream(restaurant.getMenu()).toList();
             for (Menu item: menuItems)
             {
                 for (String orderItem: orderItems)
@@ -280,6 +292,8 @@ public class Order
                 {
                     // add the £1 delivery fee
                     deliveryCost = totalInPence + 100;
+                    // set the corresponding restaurant field
+                    correspondingRestaurant = restaurant;
                     // and check if the total is valid
                     if (deliveryCost != priceTotalInPence)
                     {
