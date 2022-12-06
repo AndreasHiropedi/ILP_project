@@ -109,8 +109,9 @@ public class Order
     }
 
     /**
-     *
-     * @return
+     * getter method for the order delivery cost field
+     * @return the delivery cost of the order 
+     * (including the £1 delivery fee if the order is valid)
      */
     public int getOrderDeliveryCost()
     {
@@ -236,7 +237,6 @@ public class Order
      * computes the cost, in pence, of all order items
      * plus a charge of £1 (100 pence) per delivery, and updates the
      * appropriate field
-     *
      * also updates the order outcome accordingly
      * (if an invalid pizza is found, if the pizzas cannot be provided
      * by a single supplier, or if the total is invalid)
