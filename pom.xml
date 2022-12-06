@@ -93,5 +93,10 @@
       <artifactId>json</artifactId>
       <version>20200518</version>
     </dependency>
+    <dependency>
+      <groupId>com.mapbox.mapboxsdk</groupId>
+      <artifactId>mapbox-sdk-geojson</artifactId>
+      <version>5.8.0</version>
+    </dependency>
   </dependencies>
 </project>
