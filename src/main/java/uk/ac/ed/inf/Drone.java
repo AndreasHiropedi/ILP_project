@@ -81,6 +81,7 @@ public class Drone
 
     /**
      * setter method for the date of flight path field
+     * (to be used when writing files to GeoJSON)
      * @param dateOfFlightPlan the date inputted in the command line
      */
     public void setDateOfFlightPlan(String dateOfFlightPlan)
@@ -92,7 +93,13 @@ public class Drone
     // ========================== OTHER CLASS METHODS ==========================
     // =========================================================================
 
-
+    /**
+     *
+     */
+    public void planFlightPath()
+    {
+        // TODO: implement this method
+    }
 
 
     /**
