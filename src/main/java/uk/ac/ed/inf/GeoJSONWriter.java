@@ -45,7 +45,7 @@ public class GeoJSONWriter
             // set up all the data for GeoJSON format
             ArrayList<Point> pointsList = new ArrayList<>();
             for (LngLat point : finalCoordinates) {
-                pointsList.add(Point.fromLngLat(point.lng(), point.lat()));
+                pointsList.add(Point.fromLngLat(point.getLng(), point.getLat()));
             }
             LineString line = LineString.fromLngLats(pointsList);
             Feature feature = Feature.fromGeometry(line);

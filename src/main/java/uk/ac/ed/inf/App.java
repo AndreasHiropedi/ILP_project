@@ -102,11 +102,15 @@ public class App
         // set the available restaurants field to all the restaurants from the validated URL
         Restaurant[] restaurants = Restaurant.getRestaurantsFromRestServer(validatedURL);
         Order.setRestaurants(restaurants);
+
         // retrieve all available orders for the validated date
         String extension = "/orders" + "/" + validatedDate;
         List<Order> allOrders = RetrieveData.getData(validatedURL, extension, new TypeReference<>(){});
         // and get all the valid orders
         List<Order> allValidOrders = Order.getValidOrders();
+        // set the base URL inside the LngLat class
+        // (for retrieving data for the central area)
+        LngLat.setBaseUrl(validatedURL);
         // create the drone, and set the date to be the validated date
         Drone drone = new Drone();
         drone.setDateOfFlightPlan(validatedDate);

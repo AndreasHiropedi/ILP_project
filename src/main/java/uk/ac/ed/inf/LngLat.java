@@ -1,38 +1,101 @@
 package uk.ac.ed.inf;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.net.URL;
 import java.util.List;
 
 /**
  * this class is used to represent locations on the map
  * as a set of co-ordinates of the form (longitude, latitude)
- * @param lng the longitude
- * @param lat the latitude
  */
 @JsonIgnoreProperties("name")
-public record LngLat(
-        @JsonProperty("longitude")
-        double lng,
-        @JsonProperty("latitude")
-        double lat)
+public class LngLat
 {
 
-    /**
-     * this constant stores the maximum acceptable distance
-     * for a location to be considered close to another location
-     */
+    // all the information from the REST server
+    private double lng;
+    private double lat;
+
+    // this constant stores the maximum acceptable distance
+    // for a location to be considered close to another location
     private static final double ACCEPTABLE_DISTANCE = 0.00015;
 
-    /**
-     * this constant store the length of a drone move (in degrees)
-     */
+    // this constant store the length of a drone move (in degrees)
     private static final double DRONE_MOVE_LENGTH = 0.00015;
 
-     // checks if the current location is within a given polygon area
-     // Note: the implementation below is partly based on the following post
-     // <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
-     // @param corners a list of the vertices of the polygon
-     // @return true if the current location is inside the polygon or on the edges, false otherwise
+    // this field is used to store the validated URL from command line
+    // (used when creating a CentralArea singleton instance, integrates the
+    // command line input with that class)
+    private static URL BASE_URL;
+
+    // =========================================================================
+    // ============================= CONSTRUCTOR ===============================
+    // =========================================================================
+
+    /**
+     * constructor method for the LngLat objects
+     * @param lng the longitude
+     * @param lat the latitude
+     */
+    public LngLat(
+            @JsonProperty("longitude")
+            double lng,
+            @JsonProperty("latitude")
+            double lat)
+    {
+        this.lng = lng;
+        this.lat = lat;
+    }
+
+    // =========================================================================
+    // ================================ GETTERS ================================
+    // =========================================================================
+
+    /**
+     * getter method for the longitude of a
+     * LngLat object
+     * @return the longitude as a Double object
+     */
+    public Double getLng()
+    {
+        return lng;
+    }
+
+    /**
+     * getter method for the latitude of a
+     * LngLat object
+     * @return the latitude as a Double object
+     */
+    public Double getLat()
+    {
+        return lat;
+    }
+
+    // =========================================================================
+    // ================================ SETTERS ================================
+    // =========================================================================
+
+    /**
+     * setter method for the baseURL field
+     * (used to read the co-ordinates of the central area
+     * from the validated URL inputted in the command line)
+     * @param baseUrl the validated URL inputted in the command line
+     */
+    public static void setBaseUrl(URL baseUrl)
+    {
+        BASE_URL = baseUrl;
+    }
+
+    // =========================================================================
+    // ========================== OTHER CLASS METHODS ==========================
+    // =========================================================================
+
+    // checks if the current location is within a given polygon area
+    // Note: the implementation below is partly based on the following post
+    // <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
+    // @param corners a list of the vertices of the polygon
+    // @return true if the current location is inside the polygon or on the edges, false otherwise
     private boolean inArea(List<LngLat> corners)
     {
         // this part handles exact corners
@@ -136,7 +199,7 @@ public record LngLat(
     public boolean inCentralArea()
     {
         // get the central area from the singleton class
-        List<LngLat> corners = CentralArea.getInstance().getCentralArea();
+        List<LngLat> corners = CentralArea.getInstance(BASE_URL).getCentralArea();
         return inArea(corners);
     }
 

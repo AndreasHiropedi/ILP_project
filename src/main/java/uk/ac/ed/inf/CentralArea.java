@@ -1,6 +1,6 @@
 package uk.ac.ed.inf;
+
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -19,28 +19,27 @@ public class CentralArea
      * stores the list of the central area co-ordinates
      * as LngLat objects
      */
-    private final List<LngLat> centralAreaVertices;
+    private List<LngLat> centralAreaVertices;
 
     /**
      * constructor method for the class
      * retrieve the data from the REST server inside constructor
+     * @param baseURL the validated URL from the command line
      */
-    public CentralArea() throws MalformedURLException
-    {
-        centralAreaVertices = RetrieveData.getData(
-                new URL("https://ilp-rest.azurewebsites.net"),
-                "/centralArea", new TypeReference<>(){});
+    public CentralArea(URL baseURL) {
+        centralAreaVertices = RetrieveData.getData(baseURL, "/centralArea", new TypeReference<>(){});
     }
 
     /**
      * obtain an instance of the singleton class
+     * @param baseURL the validated URL from the command line
      * @return an instance object of the CentralArea singleton
      */
-    public static CentralArea getInstance() throws MalformedURLException
+    public static CentralArea getInstance(URL baseURL)
     {
         if (centralArea == null)
         {
-            centralArea = new CentralArea();
+            centralArea = new CentralArea(baseURL);
         }
         return centralArea;
     }
