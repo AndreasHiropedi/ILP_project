@@ -44,7 +44,7 @@ public class App
         LocalDate givenDate = LocalDate.parse(dateToVerify, formatter);
         // check provided date is in the appropriate range
         if ( givenDate.isBefore(LocalDate.parse("2023-01-01", formatter))
-                || givenDate.isAfter(LocalDate.parse("2023-05-31", formatter)) )
+                || givenDate.isAfter(LocalDate.parse("2023-05-30", formatter)) )
         {
             System.err.println("The date provided is out of range!");
             System.exit(1);
