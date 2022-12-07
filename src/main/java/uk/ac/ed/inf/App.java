@@ -105,8 +105,6 @@ public class App
         // retrieve all available orders for the validated date
         String extension = "/orders" + "/" + validatedDate;
         List<Order> allOrders = RetrieveData.getData(validatedURL, extension, new TypeReference<>(){});
-        // and get all the valid orders
-        List<Order> allValidOrders = Order.getValidOrders();
         // set the base URL inside the LngLat class
         // (for retrieving data for the central area)
         LngLat.setBaseUrl(validatedURL);

@@ -99,6 +99,7 @@ public class Drone
     public void planFlightPath()
     {
         // TODO: implement this method
+        writePlanToGeoJSON();
     }
 
 
