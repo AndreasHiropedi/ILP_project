@@ -249,7 +249,7 @@ public class LngLat
                 // and check if the two lines intersect
                 if (line.intersectsLine(noFlyZoneLine))
                 {
-                        return true;
+                    return true;
                 }
             }
         }
