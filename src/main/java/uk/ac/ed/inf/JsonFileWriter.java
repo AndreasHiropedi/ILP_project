@@ -65,6 +65,7 @@ public class JsonFileWriter
         {
             // add all the necessary information to the JSON object
             jsonObject.put("orderNo", flightPath.orderNo());
+            jsonObject.put("orderDate", flightPath.orderDate());
             jsonObject.put("fromLongitude", flightPath.fromLongitude());
             jsonObject.put("fromLatitude", flightPath.fromLatitude());
             // check if the angle is null

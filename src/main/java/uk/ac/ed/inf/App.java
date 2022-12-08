@@ -93,6 +93,12 @@ public class App
      */
     public static void main(String[] args)
     {
+        // check if enough arguments were given, to avoid any exceptions
+        if (args.length < 2)
+        {
+            System.err.println("Not enough arguments were provided!");
+            System.exit(1);
+        }
         // retrieve the command line inputs
         String inputtedDate = args[0];
         String inputtedURL = args[1];

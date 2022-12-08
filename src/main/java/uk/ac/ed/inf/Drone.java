@@ -52,6 +52,9 @@ public class Drone
     // (to be used for GeoJSON file writing)
     private String dateOfFlightPlan;
 
+    // keeps track of the time when the algorithm is started
+    private long startTime;
+
     // a list of all the flight path objects created for the given date
     // (to be written to a JSON file)
     private List<FlightPath> allFlightPathsForGivenDate = new ArrayList<>();
@@ -69,6 +72,7 @@ public class Drone
         availableMovesLeft = MAX_NUMBER_OF_MOVES_ALLOWED;
         currentPosition = APPLETON_TOWER;
         allMovesMade.add(currentPosition);
+        startTime = System.nanoTime();
     }
 
     // =========================================================================
@@ -152,66 +156,100 @@ public class Drone
     // given destination
     private int computeFlightPath(LngLat destination, String orderNo)
     {
+        // initialise the counter for number of moves taken
         movesTakenForOneWayFlightPath = 0;
-        CompassLocation backwards = null;
+        // used to keep the drone from getting stuck in an infinite loop
+        CompassDirection getsStuck = null;
+        //
         while (!currentPositionClone.closeTo(destination))
         {
-            ArrayList<CompassLocation> compassDirectionsNotInNoFlyZone = new ArrayList<>();
-            for (CompassLocation direction : CompassLocation.values())
+            // create a list of all angles that are not taking the drone in a no-fly-zone
+            ArrayList<CompassDirection> anglesNotInNoFlyZones = new ArrayList<>();
+            for (CompassDirection direction : CompassDirection.values())
             {
+                // for each direction, compute a possible next position
                 LngLat nextPosition = currentPositionClone.nextPosition(direction);
-
+                // and check if that lands the drone in a no-fly-zone
                 if (!nextPosition.inNoFlyZone() && !currentPositionClone.lineCutsThroughNoFlyZones(nextPosition))
                 {
-                    compassDirectionsNotInNoFlyZone.add(direction);
+                    // if it doesn't, add it to the list
+                    anglesNotInNoFlyZones.add(direction);
                 }
             }
-
-            if (compassDirectionsNotInNoFlyZone.contains(backwards))
+            // if the list already contains a direction that could get the drone
+            // stuck in an infinite loop, remove it
+            if (anglesNotInNoFlyZones.contains(getsStuck))
             {
-                compassDirectionsNotInNoFlyZone.remove(backwards);
+                anglesNotInNoFlyZones.remove(getsStuck);
             }
-
-            CompassLocation closestAngle = compassDirectionsNotInNoFlyZone.get(0);
-            double closestDistance = destination.distanceTo(currentPositionClone.nextPosition(closestAngle));
-
-            for (CompassLocation direction : compassDirectionsNotInNoFlyZone)
+            // set the closest angle to the first element in the list, and compute the closest distance
+            CompassDirection bestAngle = anglesNotInNoFlyZones.get(0);
+            double bestDistance = destination.distanceTo(currentPositionClone.nextPosition(bestAngle));
+            // check if there is a better direction to take
+            for (CompassDirection direction : anglesNotInNoFlyZones)
             {
                 LngLat nextPosition = currentPositionClone.nextPosition(direction);
                 double distance = destination.distanceTo(nextPosition);
-                if (distance < closestDistance)
+                // if there is, update the variables accordingly
+                if (distance < bestDistance)
                 {
-                    closestAngle = direction;
-                    closestDistance = distance;
+                    bestAngle = direction;
+                    bestDistance = distance;
                 }
             }
-            LngLat newPosition = currentPositionClone.nextPosition(closestAngle);
+            // create a new FlightPath object
+            LngLat newPosition = currentPositionClone.nextPosition(bestAngle);
+            angle = bestAngle.ordinal() * 22.5;
+            ticksSinceStartOfCalculation = (int) (System.nanoTime() - startTime);
+            createFlightPathObject(orderNo, newPosition);
+            // and take that best direction
             makeMove(newPosition);
-
-            List<CompassLocation> cum = Arrays.stream(CompassLocation.values()).toList();
-            int sadjbifghbfsuhojdfkdjiu = cum.indexOf(closestAngle)-8;
-            if (sadjbifghbfsuhojdfkdjiu<0)
+            //
+            List<CompassDirection> cum = Arrays.stream(CompassDirection.values()).toList();
+            int sadjbifghbfsuhojdfkdjiu = cum.indexOf(bestAngle)-8;
+            if (sadjbifghbfsuhojdfkdjiu < 0)
             {
-                sadjbifghbfsuhojdfkdjiu+=16;
+                sadjbifghbfsuhojdfkdjiu += 16;
             }
-            backwards = cum.get(sadjbifghbfsuhojdfkdjiu);
+            getsStuck = cum.get(sadjbifghbfsuhojdfkdjiu);
         }
+        // if we are close to the destination, make a hover move
+        // create a new FlightPath object for the hover move
+        angle = null;
+        ticksSinceStartOfCalculation = (int) (System.nanoTime() - startTime);
+        createFlightPathObject(orderNo, currentPosition);
+        // and make the hover move
         makeMove(currentPositionClone);
         return movesTakenForOneWayFlightPath;
     }
 
     // this method moves the drone from its current position
     // to a new give position
-    // @param newPosition the new position to which the drone
+    // @param updatedPosition the new position to which the drone
     //                    should be moved
-    private void makeMove(LngLat newPosition)
+    private void makeMove(LngLat updatedPosition)
     {
         // update the potential path to take
-        potentialPathToTake.add(newPosition);
+        potentialPathToTake.add(updatedPosition);
         // and the current position clone
-        currentPositionClone = newPosition;
+        currentPositionClone = updatedPosition;
         // and the number of moves taken
         movesTakenForOneWayFlightPath++;
+    }
+
+    // this method creates a FlightPath object for every move made
+    // by the drone when delivering a certain order
+    // @param orderNo     the corresponding order number
+    // @param newPosition the new position to which the drone
+    //                    should be moved (kept constant if the
+    //                    move is a hover)
+    private void createFlightPathObject(String orderNo, LngLat newPosition)
+    {
+        FlightPath currentFlightPath = new FlightPath(orderNo, dateOfFlightPlan,
+                currentPositionClone.getLng(), currentPositionClone.getLat(),
+                angle, newPosition.getLng(), newPosition.getLat(),
+                ticksSinceStartOfCalculation);
+        allFlightPathsForGivenDate.add(currentFlightPath);
     }
 
     /**
@@ -241,7 +279,7 @@ public class Drone
         }
         // once all valid orders have been looped over, write all output files
         Order.writeOrdersToJson(allOrdersForGivenDate);
-        // FlightPath.writeFlightPathsToJson(allFlightPathsForGivenDate);
+        FlightPath.writeFlightPathsToJson(allFlightPathsForGivenDate);
         writePlanToGeoJSON();
     }
 
