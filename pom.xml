@@ -12,7 +12,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <release>14</release>
+          <release>18</release>
           <showWarnings>true</showWarnings>
           <compilerArgs>
             <arg>-Xlint:all,-classfile</arg>
@@ -59,7 +59,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
-      <scope>test</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
