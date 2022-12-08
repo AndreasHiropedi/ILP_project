@@ -160,7 +160,7 @@ public class Drone
         movesTakenForOneWayFlightPath = 0;
         // used to keep the drone from getting stuck in an infinite loop
         CompassDirection getsStuck = null;
-        //
+        // if we're not close to the destination
         while (!currentPositionClone.closeTo(destination))
         {
             // create a list of all angles that are not taking the drone in a no-fly-zone
