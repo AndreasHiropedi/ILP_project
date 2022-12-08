@@ -38,7 +38,7 @@ public class GeoJSONWriter
         // the directory path to the resultfiles folder
         String path = System.getProperty("user.dir") + "/resultfiles";
         // get all the necessary information from the drone object
-        List<LngLat> finalCoordinates = drone.getAllMoves();
+        List<LngLat> finalCoordinates = drone.getAllMovesMade();
         String fileDate = drone.getDateOfFlightPlan();
         try
         {

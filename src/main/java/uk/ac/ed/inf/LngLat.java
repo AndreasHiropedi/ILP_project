@@ -3,7 +3,9 @@ package uk.ac.ed.inf;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.awt.geom.Line2D;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -206,8 +208,7 @@ public class LngLat
 
     /**
      * checks if the current location is within any of the no-fly-zones
-     * Note: the implementation below is partly based on the following post
-     * <a href = "https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon">link</a>
+     * based on information from the REST server
      * @return true if the current location is in a no-fly-zone, false otherwise
      */
     public boolean inNoFlyZone()
@@ -222,6 +223,34 @@ public class LngLat
             if (inArea(noFlyZoneCorners))
             {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check if a line between two points cuts through any of the
+     * no-fly-zones obtained from the inputted URL
+     * @param newPosition the new point being considered as a future move
+     * @return true if the line cuts through a no-fly-zone, false otherwise
+     */
+    public boolean lineCutsThroughNoFlyZones(LngLat newPosition) {
+        // create a line between the current point and the new point
+        Line2D line = new Line2D.Double(lng, lat, newPosition.getLng(), newPosition.getLat());
+        for (NoFlyZone noFlyZone: NoFlyZone.allNoFlyZones)
+        {
+            // for each no-fly-zone, get the co-ordinates of the edges
+            ArrayList<ArrayList<Double>> noFlyZoneCoords = noFlyZone.getNoFlyZoneEdgesAsDoubles();
+            for (int i = 0, j = noFlyZoneCoords.size()-1; i < noFlyZoneCoords.size(); j = i++)
+            {
+                // for each pair of co-ordinates, generate a line
+                Line2D noFlyZoneLine = new Line2D.Double(noFlyZoneCoords.get(i).get(0),noFlyZoneCoords.get(i).get(1),
+                        noFlyZoneCoords.get(j).get(0), noFlyZoneCoords.get(j).get(1));
+                // and check if the two lines intersect
+                if (line.intersectsLine(noFlyZoneLine))
+                {
+                        return true;
+                }
             }
         }
         return false;

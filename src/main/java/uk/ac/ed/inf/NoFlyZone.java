@@ -23,6 +23,10 @@ public class NoFlyZone
     // a list of all the no-fly-zones from the REST server
     public static ArrayList<NoFlyZone> allNoFlyZones = new ArrayList<>();
 
+    // =========================================================================
+    // ============================= CONSTRUCTOR ===============================
+    // =========================================================================
+
     /**
      * constructor for the no-fly-zone values
      * @param noFlyZoneEdgesAsDoubles the list of edges for a no-fly-zone object
@@ -37,6 +41,10 @@ public class NoFlyZone
         allNoFlyZones.add(this);
     }
 
+    // =========================================================================
+    // ================================ GETTERS ================================
+    // =========================================================================
+
     /**
      * getter method for the edges of the no-fly-zone
      * (edges stored as LngLat objects)
@@ -47,6 +55,21 @@ public class NoFlyZone
     {
         return noFlyZoneEdges;
     }
+
+    /**
+     * getter method for the edges of the no-fly-zone
+     * (edges stored as array lists of Double objects)
+     * @return the class field storing the edges of the
+     * no-fly-zone as array lists of Double objects
+     */
+    public ArrayList<ArrayList<Double>> getNoFlyZoneEdgesAsDoubles()
+    {
+        return noFlyZoneEdgesAsDoubles;
+    }
+
+    // =========================================================================
+    // ========================== OTHER CLASS METHODS ==========================
+    // =========================================================================
 
     // method used to populate the no-fly-zone edges list,
     // which stores the edges as LngLat objects

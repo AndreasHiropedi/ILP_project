@@ -105,6 +105,9 @@ public class App
         // retrieve all available orders for the validated date
         String extension = "/orders" + "/" + validatedDate;
         List<Order> allOrders = RetrieveData.getData(validatedURL, extension, new TypeReference<>(){});
+        // set up all the no-fly-zones
+        extension = "/noFlyZones";
+        List<NoFlyZone> allNoFlyZones = RetrieveData.getData(validatedURL, extension, new TypeReference<>(){});
         // set the base URL inside the LngLat class
         // (for retrieving data for the central area)
         LngLat.setBaseUrl(validatedURL);
