@@ -204,14 +204,16 @@ public class Drone
             createFlightPathObject(orderNo, newPosition);
             // and take that best direction
             makeMove(newPosition);
-            //
-            List<CompassDirection> cum = Arrays.stream(CompassDirection.values()).toList();
-            int sadjbifghbfsuhojdfkdjiu = cum.indexOf(bestAngle)-8;
-            if (sadjbifghbfsuhojdfkdjiu < 0)
+            // get all compass directions
+            List<CompassDirection> allDirections = Arrays.stream(CompassDirection.values()).toList();
+            // remove the reverse of the angle that was taken
+            int reverseOfAngleTaken = allDirections.indexOf(bestAngle) - 8;
+            if (reverseOfAngleTaken < 0)
             {
-                sadjbifghbfsuhojdfkdjiu += 16;
+                reverseOfAngleTaken += 16;
             }
-            getsStuck = cum.get(sadjbifghbfsuhojdfkdjiu);
+            // and set the stuck direction to that reverse to avoid getting stuck
+            getsStuck = allDirections.get(reverseOfAngleTaken);
         }
         // if we are close to the destination, make a hover move
         // create a new FlightPath object for the hover move
@@ -226,7 +228,7 @@ public class Drone
     // this method moves the drone from its current position
     // to a new give position
     // @param updatedPosition the new position to which the drone
-    //                    should be moved
+    //                        should be moved
     private void makeMove(LngLat updatedPosition)
     {
         // update the potential path to take
