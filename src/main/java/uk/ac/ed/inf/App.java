@@ -94,7 +94,7 @@ public class App
     public static void main(String[] args)
     {
         // check if enough arguments were given, to avoid any exceptions
-        if (args.length < 2)
+        if (!(args.length == 3))
         {
             System.err.println("Not enough arguments were provided!");
             System.exit(1);
