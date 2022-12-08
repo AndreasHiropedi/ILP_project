@@ -31,12 +31,12 @@ public class Drone
     // (all points covered during the flight)
     private List<LngLat> allMoves = new ArrayList<>();
 
-    // all valid orders for the given date (from command line)
-    private List<Order> ordersForGivenDate = Order.getValidOrders();
-
     // field used to store the date inputted from the command line
     // (to be used for GeoJSON file writing)
     private String dateOfFlightPlan;
+
+    //
+    private List<FlightPath> allFlightPathsForGivenDate = new ArrayList<>();
 
     // =========================================================================
     // ============================= CONSTRUCTOR ===============================
@@ -93,15 +93,74 @@ public class Drone
     // ========================== OTHER CLASS METHODS ==========================
     // =========================================================================
 
-    /**
-     *
-     */
-    public void planFlightPath()
+    //
+    private void moveDrone(LngLat newPosition)
     {
-        // TODO: implement this method
-        writePlanToGeoJSON();
+        allMoves.add(newPosition);
+        currentPosition = newPosition;
+        availableMovesLeft--;
     }
 
+    //
+    private void makeMove(LngLat goalDestination)
+    {
+        LngLat goal = goalDestination;
+
+        while (!currentPosition.closeTo(goal))
+        {
+            ArrayList<CompassLocation> compassDirectionsNotInNoFlyZone = new ArrayList<>();
+            for (CompassLocation direction : CompassLocation.values())
+            {
+                LngLat nextPosition = currentPosition.nextPosition(direction);
+
+                if (!nextPosition.inNoFlyZone())
+                {
+                    compassDirectionsNotInNoFlyZone.add(direction);
+                }
+            }
+            CompassLocation closestAngle = compassDirectionsNotInNoFlyZone.get(0);
+            double closestDistance = goal.distanceTo(currentPosition.nextPosition(closestAngle));
+
+            for (CompassLocation direction : compassDirectionsNotInNoFlyZone)
+            {
+                LngLat nextPosition = currentPosition.nextPosition(direction);
+                double distance = goal.distanceTo(nextPosition);
+                if (distance < closestDistance)
+                {
+                    closestAngle = direction;
+                    closestDistance = distance;
+                }
+            }
+            moveDrone(currentPosition.nextPosition(closestAngle));
+        }
+        moveDrone(currentPosition);
+    }
+
+
+    /**
+     *
+     * @param allOrdersForGivenDate
+     */
+    public void planFlightPath(List<Order> allOrdersForGivenDate)
+    {
+        for (Order order: Order.getValidOrders())
+        {
+            if (availableMovesLeft > 0)
+            {
+                LngLat destination = order.getCorrespondingRestaurant().getRestaurantLocation();
+                makeMove(destination);
+                if (currentPosition.equals(destination))
+                {
+                    destination = APPLETON_TOWER;
+                    makeMove(destination);
+                }
+                order.setOutcome(OrderOutcome.Delivered);
+            }
+        }
+        Order.writeOrdersToJson(allOrdersForGivenDate);
+        FlightPath.writeFlightPathsToJson(allFlightPathsForGivenDate);
+        writePlanToGeoJSON();
+    }
 
     /**
      * this method is used to write the flight plan for delivering

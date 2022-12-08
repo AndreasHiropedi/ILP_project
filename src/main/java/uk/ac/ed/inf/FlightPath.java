@@ -1,5 +1,7 @@
 package uk.ac.ed.inf;
 
+import java.util.List;
+
 /**
  * this class is used to store information about
  * each individual move made by the drone
@@ -23,10 +25,10 @@ public record FlightPath (
      * for a specific date (inputted in the command line)
      * to a JSON file
      */
-    public void writeFlightPathToJson()
+    public static void writeFlightPathsToJson(List<FlightPath> allFlightPaths)
     {
         JsonFileWriter fileWriter = new JsonFileWriter();
-        fileWriter.writeFlightPathToJSON(this);
+        fileWriter.writeFlightPathToJSON(allFlightPaths);
     }
 
 }

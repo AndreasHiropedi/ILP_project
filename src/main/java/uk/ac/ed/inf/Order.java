@@ -205,7 +205,7 @@ public class Order
     // =========================== ORDER VALIDATION ============================
     // =========================================================================
 
-    //
+
     // check if the order is valid, and update the order outcome accordingly
     // @return true if an order is valid, false otherwise
     private boolean isOrderValid()
@@ -326,10 +326,10 @@ public class Order
      * for a specific date (inputted in the command line)
      * to a JSON file
      */
-    public void writeOrderToJson()
+    public static void writeOrdersToJson(List<Order> orders)
     {
         JsonFileWriter fileWriter = new JsonFileWriter();
-        fileWriter.writeOrderToJSON(this);
+        fileWriter.writeOrderToJSON(orders);
     }
 
 }

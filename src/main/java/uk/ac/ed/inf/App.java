@@ -113,6 +113,6 @@ public class App
         // set the date to be the validated date
         drone.setDateOfFlightPlan(validatedDate);
         // and run the flight planning algorithm for the given date
-        drone.planFlightPath();
+        drone.planFlightPath(allOrders);
     }
 }
