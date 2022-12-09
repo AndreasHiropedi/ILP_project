@@ -179,7 +179,7 @@ public class LngLat
      * @return the new location of the drone after the move is made
      * (using the (longitude, latitude) format)
      */
-    public LngLat nextPosition(CompassLocation position)
+    public LngLat nextPosition(CompassDirection position)
     {
         // if the drone is hovering, then the position stays the same
         if (position == null)
