@@ -25,7 +25,7 @@ public class Order
     private OrderOutcome outcome;
 
     // a list of all restaurants on the PizzaDronz app
-    private static Restaurant[] restaurants;
+    private static Restaurant[] restaurants = {};
 
     // a list containing all orders that are deemed valid
     private static ArrayList<Order> validOrders = new ArrayList<>();
