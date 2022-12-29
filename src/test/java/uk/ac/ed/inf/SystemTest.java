@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -79,8 +80,17 @@ public class SystemTest
         }
         assertEquals(20, totalDelivered);
 
-        // TODO: implement checks to ensure appropriate files are created
-
+        // check appropriate files are created
+        String path = System.getProperty("user.dir") + "/resultfiles";
+        String file1 = "deliveries-2023-01-11.json";
+        String file2 = "drone-2023-01-11.geojson";
+        String file3 = "flightpath-2023-01-11.json";
+        String check1 = path + "/" + file1;
+        String check2 = path + "/" + file2;
+        String check3 = path + "/" + file3;
+        assertTrue(new File(check1).exists());
+        assertTrue(new File(check2).exists());
+        assertTrue(new File(check3).exists());
     }
 
     @Test
@@ -117,8 +127,17 @@ public class SystemTest
         }
         assertEquals(20, totalDelivered);
 
-        // TODO: implement checks to ensure appropriate files are created
-
+        // check appropriate files are created
+        String path = System.getProperty("user.dir") + "/resultfiles";
+        String file1 = "deliveries-2023-02-03.json";
+        String file2 = "drone-2023-02-03.geojson";
+        String file3 = "flightpath-2023-02-03.json";
+        String check1 = path + "/" + file1;
+        String check2 = path + "/" + file2;
+        String check3 = path + "/" + file3;
+        assertTrue(new File(check1).exists());
+        assertTrue(new File(check2).exists());
+        assertTrue(new File(check3).exists());
     }
 
     @Test
@@ -155,8 +174,17 @@ public class SystemTest
         }
         assertEquals(20, totalDelivered);
 
-        // TODO: implement checks to ensure appropriate files are created
-
+        // check appropriate files are created
+        String path = System.getProperty("user.dir") + "/resultfiles";
+        String file1 = "deliveries-2023-03-21.json";
+        String file2 = "drone-2023-03-21.geojson";
+        String file3 = "flightpath-2023-03-21.json";
+        String check1 = path + "/" + file1;
+        String check2 = path + "/" + file2;
+        String check3 = path + "/" + file3;
+        assertTrue(new File(check1).exists());
+        assertTrue(new File(check2).exists());
+        assertTrue(new File(check3).exists());
     }
 
     @Test
@@ -193,8 +221,17 @@ public class SystemTest
         }
         assertEquals(20, totalDelivered);
 
-        // TODO: implement checks to ensure appropriate files are created
-
+        // check appropriate files are created
+        String path = System.getProperty("user.dir") + "/resultfiles";
+        String file1 = "deliveries-2023-04-13.json";
+        String file2 = "drone-2023-04-13.geojson";
+        String file3 = "flightpath-2023-04-13.json";
+        String check1 = path + "/" + file1;
+        String check2 = path + "/" + file2;
+        String check3 = path + "/" + file3;
+        assertTrue(new File(check1).exists());
+        assertTrue(new File(check2).exists());
+        assertTrue(new File(check3).exists());
     }
 
     @Test
@@ -231,8 +268,17 @@ public class SystemTest
         }
         assertEquals(20, totalDelivered);
 
-        // TODO: implement checks to ensure appropriate files are created
-
+        // check appropriate files are created
+        String path = System.getProperty("user.dir") + "/resultfiles";
+        String file1 = "deliveries-2023-05-22.json";
+        String file2 = "drone-2023-05-22.geojson";
+        String file3 = "flightpath-2023-05-22.json";
+        String check1 = path + "/" + file1;
+        String check2 = path + "/" + file2;
+        String check3 = path + "/" + file3;
+        assertTrue(new File(check1).exists());
+        assertTrue(new File(check2).exists());
+        assertTrue(new File(check3).exists());
     }
 
 }
