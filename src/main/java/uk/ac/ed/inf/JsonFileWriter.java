@@ -1,6 +1,8 @@
 package uk.ac.ed.inf;
 
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class JsonFileWriter
             // check if the angle is null
             if (flightPath.angle() == null)
             {
-                jsonObject.put("angle", JSONObject.NULL);
+                jsonObject.put("angle", Double.NaN);
             }
             else
             {
@@ -97,14 +99,16 @@ public class JsonFileWriter
     {
         // the directory path to the resultfiles folder
         String path = System.getProperty("user.dir") + "/resultfiles";
+        JSONArray objects = new JSONArray();
+        for (JSONObject object: allJsonObjects)
+        {
+            objects.add(object);
+        }
         try
         {
             // write the JSON object (and all data it stores) to given file
             FileWriter file = new FileWriter(path + "/" + filename);
-            for (JSONObject object: allJsonObjects)
-            {
-                file.write(object.toString());
-            }
+            file.write(objects.toJSONString());
             file.close();
         }
         catch (IOException e)
