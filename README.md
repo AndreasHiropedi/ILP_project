@@ -9,3 +9,5 @@ The whole implementation of the ILP project, according to the documentation, inc
 - automated tests that check for code functionality (found in src -> tests)
 - supporting documents for the software testing coursework (such as requirements document, courserwork specification, planning documents, etc.)
 - portfolio document for the software testing coursework
+- overall ILP mark: 85/100
+- overall Software Testing mark: 72/100
